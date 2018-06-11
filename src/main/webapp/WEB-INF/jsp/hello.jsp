@@ -9,6 +9,7 @@
 <html>
 <head>
     <title>${message}</title>
+    <script type="text/javascript" src="/resources/js/demo.js"></script>
 </head>
 <body>
 ${message} user
