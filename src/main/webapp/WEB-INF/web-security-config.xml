@@ -17,11 +17,13 @@
         />
         <security:logout logout-success-url="/login.html"/>
     </security:http>
-    <bean id ="passwordEncoder" class = "org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+    <bean id ="passwordEncoder" class = "org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+        <constructor-arg name="strength" value="11" />
+    </bean>
     <security:authentication-manager>
         <security:authentication-provider>
             <security:user-service>
-                <security:user name="username" authorities="ROLE_USER" password="$2a$04$Iop91DkGXe8xj0Ymj5HCu.0pwgZbEKTtSNoxM43AS2vloktIdsLXa"/> <!-- password -->
+                <security:user name="username" authorities="ROLE_USER" password="$2a$11$niNqWKsS/IcvTvJy41JRruq1GU5zPz0mc5m0wZWVZPBfjtbjF5z/y"/> <!-- password -->
             </security:user-service>
         </security:authentication-provider>
     </security:authentication-manager>
