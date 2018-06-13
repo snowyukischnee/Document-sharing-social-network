@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 @RequestMapping("")
@@ -17,16 +19,18 @@ public class Hello {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ModelAndView login() {
-        ModelAndView model = new ModelAndView();
-        model.setViewName("login");
-        return model;
+    public String login(ModelMap model) {
+        return "login";
     }
 
     @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public ModelAndView index() {
-        ModelAndView model = new ModelAndView();
-        model.setViewName("index");
-        return model;
+    public String index(ModelMap model) {
+        return "index";
+    }
+
+
+    public String upload(@RequestParam("file") MultipartFile file, ModelMap model) {
+        model.addAttribute("file", file);
+        return "redirect:index";
     }
 }
