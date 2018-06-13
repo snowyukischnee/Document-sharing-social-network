@@ -14,10 +14,8 @@
 <body>
 <h1>Login</h1>
 <form action="perform_login" method='POST'>
-    User:
-    <input type='text' name='username' value=''><br>
-    Password:
-    <input type='password' name='password' />
+    User:<input type='text' name='username' value=''>
+    Password:<input type='password' name='password' />
     <input name="submit" type="submit" value="submit" />
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </form>

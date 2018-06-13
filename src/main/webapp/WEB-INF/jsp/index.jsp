@@ -12,6 +12,10 @@
     <title>Title</title>
 </head>
 <body>
-    index
+    Welcome ${pageContext.request.userPrincipal.name}
+    <form action="logout" method="POST">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+        <input type="submit" name="submit" value="logout"/>
+    </form>
 </body>
 </html>
