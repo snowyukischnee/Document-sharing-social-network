@@ -12,4 +12,5 @@
     <mvc:resources mapping="/resources/**" location="/resources/demo/" cache-period="31556926"/>
     <mvc:annotation-driven/>
     <import resource="web-security-config.xml"/>
+    <import resource="web-config.xml"/>
 </beans>

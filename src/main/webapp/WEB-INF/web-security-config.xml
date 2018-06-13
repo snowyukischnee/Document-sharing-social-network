@@ -20,11 +20,10 @@
     <bean id ="passwordEncoder" class = "org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
         <constructor-arg name="strength" value="11" />
     </bean>
+    <bean id="customUserDetailsService" class="com.demo.security.CustomUserDetailsService"/>
     <security:authentication-manager>
-        <security:authentication-provider>
-            <security:user-service>
-                <security:user name="username" authorities="ROLE_USER" password="$2a$11$niNqWKsS/IcvTvJy41JRruq1GU5zPz0mc5m0wZWVZPBfjtbjF5z/y"/> <!-- password -->
-            </security:user-service>
+        <security:authentication-provider user-service-ref="customUserDetailsService">
+            <security:password-encoder ref="passwordEncoder"/>
         </security:authentication-provider>
     </security:authentication-manager>
 </beans>
