@@ -19,5 +19,12 @@
     <input name="submit" type="submit" value="submit" />
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </form>
+<h1>Register</h1>
+<form action="register" method='POST'>
+    User:<input type='text' name='username' value=''>
+    Password:<input type='password' name='password' />
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+    <input name="submit" type="submit" value="submit" />
+</form>
 </body>
 </html>
