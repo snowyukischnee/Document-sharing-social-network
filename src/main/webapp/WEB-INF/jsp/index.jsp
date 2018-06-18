@@ -25,7 +25,6 @@
     </form>
     Changepass
     <form action="changepass" method='POST'>
-        User:<input type='text' name='username' value=''>
         Password:<input type='password' name='password' />
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
         <input name="submit" type="submit" value="submit" />

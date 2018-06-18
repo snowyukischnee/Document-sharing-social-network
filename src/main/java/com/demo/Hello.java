@@ -2,11 +2,10 @@ package com.demo;
 
 import com.demo.db.Account;
 import com.demo.db.AccountDAO;
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.demo.security.MongoUserDetails;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +48,11 @@ public class Hello {
     }
 
     @RequestMapping(value = "/changepass", method = RequestMethod.POST)
-    public String changepass(@RequestParam("username") String usrname, @RequestParam("password") String pssword, ModelMap model) {
+    public String changepass(@RequestParam("password") String pssword, ModelMap model) {
         AccountDAO accdao = new AccountDAO();
         String HashedPassword = passwordEncoder.encode(pssword);
+        MongoUserDetails user = (MongoUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String usrname = user.getUsername();
         Account acc_orig = new Account(usrname, null, null);
         Document doc = accdao.Find(acc_orig);
         Account acc_dest = new Account(doc.getString("username"), doc.getString("password"), (List<String>)doc.get("roles"));
@@ -68,7 +68,7 @@ public class Hello {
 
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
     public String upload(@RequestParam("file") MultipartFile file, ModelMap model) {
-        model.addAttribute("file", file);
+        System.out.println(file);
         return "redirect:index";
     }
 }
