@@ -12,6 +12,5 @@ public interface StorageImpl {
     public void MkDirIfnExist(String path);
     public void Save(MultipartFile file, String path, String uid) throws IOException;
     public List<File> ListFiles(String path, String uid);
-    public FileInputStream GetStream(String path, String uid, String filename) throws FileNotFoundException;
     public File GetFile(String path, String uid, String filename);
 }

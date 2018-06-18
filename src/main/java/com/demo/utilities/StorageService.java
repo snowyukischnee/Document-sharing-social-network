@@ -49,18 +49,6 @@ public class StorageService implements StorageImpl {
     }
 
     @Override
-    public FileInputStream GetStream(String path, String uid, String filename) throws FileNotFoundException {
-        path = path.concat(BaseDir + "/");
-        path = path.concat(uid + "/");
-        path = path.concat(filename);
-        File file = new File(path);
-        if(!file.exists()) {
-            return null;
-        }
-        return new FileInputStream(file);
-    }
-
-    @Override
     public File GetFile(String path, String uid, String filename) {
         path = path.concat(BaseDir + "/");
         path = path.concat(uid + "/");
