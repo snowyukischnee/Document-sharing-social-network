@@ -77,9 +77,9 @@ public class Hello {
         String usrname = ((MongoUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         Account acc_orig = new Account(usrname, null, null);
         String uid = accdao.GetId(acc_orig);
-        String path = request.getServletContext().getRealPath("/uploads/" + uid + "/");
+        String path = request.getServletContext().getRealPath("/");
         try {
-            storageService.Save(file, path);
+            storageService.Save(file, path, uid);
         } catch (IOException ex) {
             ex.printStackTrace();
         }

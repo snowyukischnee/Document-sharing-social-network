@@ -6,4 +6,3 @@ requirements:
 note:
 	1.	"D:\Program Files\MongoDB\Server\3.6\bin\mongod.exe" --dbpath "C:\Users\TuanNH\Desktop\SMIP\database"
 	2.	demodb.users.json exported 'user' collection in 'demodb' database
-	3.	Create "uploads" folder in "./target/SMIP/"
