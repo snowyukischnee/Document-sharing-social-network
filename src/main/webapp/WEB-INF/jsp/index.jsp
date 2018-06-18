@@ -12,11 +12,10 @@
     <title>Title</title>
 </head>
 <body>
-    Welcome ${pageContext.request.userPrincipal.name}
-    <form method="POST" action="upload" enctype="multipart/form-data">
+    <h1>Welcome ${pageContext.request.userPrincipal.name}</h1>
+    <form action="upload?${_csrf.parameterName}=${_csrf.token}" method="POST" enctype="multipart/form-data">
         Upload<input type="file" name="files" />
-        <input type="submit" value="Submit" />
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+        <input type="submit" name="submit" value="upload" accept=".pdf"/>
     </form>
     <br>
     <form action="logout" method="POST">
