@@ -32,9 +32,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             List<String> roles = (List<String>) document.get("roles");
             boolean isEnabled = document.getBoolean("enabled");
             CustomUserDetails mongoUserDetails = new CustomUserDetails(_id, u, p, roles.toArray(new String[roles.size()]), isEnabled);
-            System.out.println(u);
-            System.out.println(_id.toString());
-            System.out.println(isEnabled);
             return mongoUserDetails;
         } else {
             throw new UsernameNotFoundException(username + " not found!");

@@ -27,9 +27,6 @@ public class AccountDao implements DaoImpl<Account> {
     }
 
     @Override
-    public String GetId(Account obj) { return obj.toString(); }
-
-    @Override
     public void Insert(Account obj) { collection.insertOne(obj.ToDocument()); }
 
     @Override

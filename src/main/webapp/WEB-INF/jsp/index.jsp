@@ -10,6 +10,7 @@
 <html>
 <head>
     <title>Title</title>
+    <script src="/resources/js/index.js"></script>
 </head>
 <body>
     <h1>Welcome ${pageContext.request.userPrincipal.name}</h1>
