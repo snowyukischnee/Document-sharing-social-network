@@ -14,6 +14,7 @@
 <body>
     <h1>Welcome ${pageContext.request.userPrincipal.name}</h1>
     <h2>Files uploaded</h2>
+    <img src="/download?file=Untitled.png"/>
     <table>
     <c:forEach items="${files}" var="item">
         <tr>

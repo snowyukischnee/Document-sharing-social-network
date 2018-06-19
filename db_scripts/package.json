@@ -1,0 +1,14 @@
+{
+  "name": "db_scripts",
+  "version": "1.0.0",
+  "description": "generate mongodb database script",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "TuanNH",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "mongodb": "^3.0.10"
+  }
+}

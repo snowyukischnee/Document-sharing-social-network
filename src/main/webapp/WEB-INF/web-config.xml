@@ -2,20 +2,28 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    <util:constant id="ConnectionString" static-field="com.swd.config.Config.ConnectionString"/>
+    <util:constant id="MultipartResolverMaxUploadSize" static-field="com.swd.config.Config.MultipartResolverMaxUploadSize"/>
+    <util:constant id="MultipartResolverMaxInMemorySize" static-field="com.swd.config.Config.MultipartResolverMaxInMemorySize"/>
+    <util:constant id="InternalResourceViewResolverPrefix" static-field="com.swd.config.Config.InternalResourceViewResolverPrefix"/>
+    <util:constant id="InternalResourceViewResolverSuffix" static-field="com.swd.config.Config.InternalResourceViewResolverSuffix"/>
+    <util:constant id="MultipartResolverDefaultEncoding" static-field="com.swd.config.Config.MultipartResolverDefaultEncoding"/>
+
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/jsp/"/>
-        <property name="suffix" value=".jsp"/>
+        <property name="prefix" ref="InternalResourceViewResolverPrefix"/>
+        <property name="suffix" ref="InternalResourceViewResolverSuffix"/>
     </bean>
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <property name="maxUploadSize" value="104857600" />
-        <property name="maxInMemorySize" value="104857600" />
-        <property name="defaultEncoding" value="utf-8"/>
+        <property name="maxUploadSize" ref="MultipartResolverMaxUploadSize" />
+        <property name="maxInMemorySize" ref="MultipartResolverMaxInMemorySize" />
+        <property name="defaultEncoding" ref="MultipartResolverDefaultEncoding"/>
     </bean>
-    <mvc:resources mapping="/resources/**" location="/resources/demo/" cache-period="31556926"/>
+    <mvc:resources mapping="/resources/**" location="/resources/swd/" cache-period="31556926"/>
     <mvc:annotation-driven/>
     <bean id="mongoClient" class="com.mongodb.MongoClient">
-        <constructor-arg name="uri" value="mongodb://127.0.0.1:27017"/>
+        <constructor-arg name="uri" ref="ConnectionString"/>
     </bean>
-    <context:component-scan base-package="com.demo"/>
+    <context:component-scan base-package="com.swd"/>
 </beans>
