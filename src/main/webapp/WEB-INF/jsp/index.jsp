@@ -14,12 +14,12 @@
 </head>
 <body>
     <h1>Welcome ${pageContext.request.userPrincipal.name}</h1>
-    <form action="upload?${_csrf.parameterName}=${_csrf.token}" method="POST" enctype="multipart/form-data">
-        Upload<input type="file" name="files" accept=".pdf"/>
+    <form action="upload-gg/?${_csrf.parameterName}=${_csrf.token}" method="POST" enctype="multipart/form-data">
+        Upload<input type="file" name="files" accept=".pdf" multiple=""/>
         <input type="submit" name="submit" value="upload"/>
     </form>
     <br>
-    <a href="/list">List all uploaded files</a>
+    <a href="/list-gg">List all uploaded files</a>
     <br>
     <form action="logout" method="POST">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />

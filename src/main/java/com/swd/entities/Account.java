@@ -3,22 +3,21 @@ package com.swd.entities;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import java.util.Date;
 import java.util.List;
 
-public class Account implements EntityImpl {
+public class Account extends AccountBaseClass implements EntityImpl {
+    protected String name;
+    protected Date dob;
+    protected String email;
+    protected boolean gender;
 
-    protected ObjectId _id;
-    protected String username;
-    protected String password; // hashed
-    protected List<String> roles;
-    protected boolean enabled;
-
-    public Account(ObjectId _id, String username, String password, List<String> roles, boolean enabled) {
-        this._id = _id;
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
-        this.enabled = enabled;
+    public Account(ObjectId _id, String username, String password, List<String> roles, Date dateCreated, boolean enabled, String name, Date dob, String email, boolean gender) {
+        super(_id, username, password, roles, dateCreated, enabled);
+        this.name = name;
+        this.dob = dob;
+        this.email = email;
+        this.gender = gender;
     }
 
     @Override
@@ -27,33 +26,28 @@ public class Account implements EntityImpl {
         doc.append("username", username);
         doc.append("password", password);
         doc.append("roles", roles);
+        doc.append("dateCreated", dateCreated);
         doc.append("enabled", enabled);
+        doc.append("name", name);
+        doc.append("dob", dob);
+        doc.append("email", email);
+        doc.append("gender", gender);
         return doc;
     }
 
-    public ObjectId get_id() { return _id; }
+    public String getName() { return name; }
 
-    public void set_id(ObjectId _id) { this._id = _id; }
+    public void setName(String name) { this.name = name; }
 
-    public String getUsername() { return username; }
+    public Date getDob() { return dob; }
 
-    public void setUsername(String username) { this.username = username; }
+    public void setDob(Date dob) { this.dob = dob; }
 
-    public String getPassword() { return password; }
+    public String getEmail() { return email; }
 
-    public void setPassword(String password) { this.password = password; }
+    public void setEmail(String email) { this.email = email; }
 
-    public List<String> getRoles() { return roles; }
+    public boolean isGender() { return gender; }
 
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
+    public void setGender(boolean gender) { this.gender = gender; }
 }
