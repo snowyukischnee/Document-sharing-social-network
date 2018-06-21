@@ -1,9 +1,5 @@
 package com.swd.controllers;
 
-import com.swd.entities.Account;
-import com.swd.entities.AccountBaseClass;
-import com.swd.models.AccountDao;
-import com.swd.models.DaoImpl;
 import com.swd.security.CustomUserDetails;
 import com.swd.utilities.StorageImpl;
 import com.swd.utilities.StorageService;

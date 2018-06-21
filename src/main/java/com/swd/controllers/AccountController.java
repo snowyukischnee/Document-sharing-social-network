@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-public class LoginController {
+public class AccountController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -27,27 +27,7 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@RequestParam("username") String usrname, @RequestParam("password") String pssword) {
-        DaoBaseClass<Account> accdao = new DaoBaseClass<Account>("account");
-        String HashedPassword = passwordEncoder.encode(pssword);
-        List<String> roles = new ArrayList<>();
-        roles.add("ROLE_USER");
-        Account acc = new Account(
-                null,
-                usrname,
-                HashedPassword,
-                roles,
-                new Date(),
-                true,
-                null,
-                null,
-                null,
-                false
-        );
-        accdao.Insert(acc);
-        return "redirect:login";
-    }
+
 
     @RequestMapping(value = "/changepass", method = RequestMethod.POST)
     public String changepass(@RequestParam("password") String pssword) {
