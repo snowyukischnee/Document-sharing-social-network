@@ -6,7 +6,7 @@ import org.bson.types.ObjectId;
 import java.util.Date;
 import java.util.List;
 
-public class Account extends AccountBaseClass implements EntityImpl {
+public class Account extends AccountBaseClass {
     protected String name;
     protected Date dob;
     protected String email;

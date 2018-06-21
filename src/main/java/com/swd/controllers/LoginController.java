@@ -1,9 +1,7 @@
 package com.swd.controllers;
 
 import com.swd.entities.Account;
-import com.swd.entities.AccountBaseClass;
-import com.swd.models.AccountDao;
-import com.swd.models.DaoImpl;
+import com.swd.models.DaoBaseClass;
 import com.swd.security.CustomUserDetails;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +29,7 @@ public class LoginController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String register(@RequestParam("username") String usrname, @RequestParam("password") String pssword) {
-        DaoImpl<AccountBaseClass> accdao = new AccountDao();
+        DaoBaseClass<Account> accdao = new DaoBaseClass<Account>("account");
         String HashedPassword = passwordEncoder.encode(pssword);
         List<String> roles = new ArrayList<>();
         roles.add("ROLE_USER");
@@ -53,7 +51,7 @@ public class LoginController {
 
     @RequestMapping(value = "/changepass", method = RequestMethod.POST)
     public String changepass(@RequestParam("password") String pssword) {
-        DaoImpl<AccountBaseClass> accdao = new AccountDao();
+        DaoBaseClass<Account> accdao = new DaoBaseClass<Account>("account");
         String HashedPassword = passwordEncoder.encode(pssword);
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Account acc_orig = new Account(

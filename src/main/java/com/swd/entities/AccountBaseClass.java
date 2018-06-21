@@ -6,8 +6,7 @@ import org.bson.types.ObjectId;
 import java.util.Date;
 import java.util.List;
 
-public class AccountBaseClass implements EntityImpl {
-    protected ObjectId _id;
+public class AccountBaseClass extends EntityBaseClass {
     protected String username;
     protected String password; // hashed
     protected List<String> roles;
@@ -15,7 +14,7 @@ public class AccountBaseClass implements EntityImpl {
     protected boolean enabled;
 
     public AccountBaseClass(ObjectId _id, String username, String password, List<String> roles, Date dateCreated, boolean enabled) {
-        this._id = _id;
+        super(_id);
         this.username = username;
         this.password = password;
         this.roles = roles;
@@ -33,10 +32,6 @@ public class AccountBaseClass implements EntityImpl {
         doc.append("enabled", enabled);
         return doc;
     }
-
-    public ObjectId get_id() { return _id; }
-
-    public void set_id(ObjectId _id) { this._id = _id; }
 
     public String getUsername() { return username; }
 
