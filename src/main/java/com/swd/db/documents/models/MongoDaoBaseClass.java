@@ -1,21 +1,21 @@
-package com.swd.models;
+package com.swd.db.documents.models;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.swd.config.Config;
-import com.swd.entities.EntityBaseClass;
+import com.swd.db.documents.entities.MongoEntityBaseClass;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-public class DaoBaseClass<T extends EntityBaseClass> implements DaoImpl<T>  {
+public class MongoDaoBaseClass<T extends MongoEntityBaseClass> implements MongoDaoInterface<T>  {
 
     protected MongoClient mongoClient;
     protected MongoDatabase db;
     protected MongoCollection<Document> collection;
 
-    public DaoBaseClass(String collection_name) {
+    public MongoDaoBaseClass(String collection_name) {
         init(collection_name);
     }
 

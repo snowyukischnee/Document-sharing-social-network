@@ -1,12 +1,12 @@
-package com.swd.entities;
+package com.swd.db.documents.entities;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-public class EntityBaseClass implements EntityImpl {
+public class MongoEntityBaseClass implements MongoEntityInterface {
     protected ObjectId _id;
 
-    public EntityBaseClass(ObjectId _id) {
+    public MongoEntityBaseClass(ObjectId _id) {
         this._id = _id;
     }
 

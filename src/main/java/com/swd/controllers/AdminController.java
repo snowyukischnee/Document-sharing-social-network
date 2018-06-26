@@ -1,7 +1,7 @@
 package com.swd.controllers;
 
-import com.swd.entities.Account;
-import com.swd.models.DaoBaseClass;
+import com.swd.db.documents.entities.Account;
+import com.swd.db.documents.models.MongoDaoBaseClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -26,7 +26,7 @@ public class AdminController {
 
     @RequestMapping(value = "/admin/register", method = RequestMethod.POST)
     public String register(@RequestParam("username") String usrname, @RequestParam("password") String pssword) {
-        DaoBaseClass<Account> accdao = new DaoBaseClass<Account>("account");
+        MongoDaoBaseClass<Account> accdao = new MongoDaoBaseClass<Account>("account");
         String HashedPassword = passwordEncoder.encode(pssword);
         List<String> roles = new ArrayList<>();
         roles.add("ROLE_USER");

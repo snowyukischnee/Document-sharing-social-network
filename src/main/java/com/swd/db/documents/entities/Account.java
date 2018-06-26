@@ -1,4 +1,4 @@
-package com.swd.entities;
+package com.swd.db.documents.entities;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;

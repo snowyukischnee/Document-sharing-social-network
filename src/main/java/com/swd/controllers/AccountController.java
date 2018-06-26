@@ -1,7 +1,7 @@
 package com.swd.controllers;
 
-import com.swd.entities.Account;
-import com.swd.models.DaoBaseClass;
+import com.swd.db.documents.entities.Account;
+import com.swd.db.documents.models.MongoDaoBaseClass;
 import com.swd.security.CustomUserDetails;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -31,7 +29,7 @@ public class AccountController {
 
     @RequestMapping(value = "/changepass", method = RequestMethod.POST)
     public String changepass(@RequestParam("password") String pssword) {
-        DaoBaseClass<Account> accdao = new DaoBaseClass<Account>("account");
+        MongoDaoBaseClass<Account> accdao = new MongoDaoBaseClass<Account>("account");
         String HashedPassword = passwordEncoder.encode(pssword);
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Account acc_orig = new Account(

@@ -1,4 +1,4 @@
-package com.swd.entities;
+package com.swd.db.documents.entities;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -6,7 +6,7 @@ import org.bson.types.ObjectId;
 import java.util.Date;
 import java.util.List;
 
-public class AccountBaseClass extends EntityBaseClass {
+public class AccountBaseClass extends MongoEntityBaseClass {
     protected String username;
     protected String password; // hashed
     protected List<String> roles;

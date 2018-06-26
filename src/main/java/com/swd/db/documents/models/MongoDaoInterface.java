@@ -1,9 +1,9 @@
-package com.swd.models;
+package com.swd.db.documents.models;
 
-import com.swd.entities.EntityImpl;
+import com.swd.db.documents.entities.MongoEntityInterface;
 import org.bson.Document;
 
-public interface DaoImpl<T extends EntityImpl > {
+public interface MongoDaoInterface<T extends MongoEntityInterface> {
     public void init(String collection_name);
     public void Insert(T obj);
     public Document Find(T obj);
