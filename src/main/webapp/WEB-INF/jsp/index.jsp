@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: TuanNH
@@ -31,5 +32,13 @@
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
         <input name="submit" type="submit" value="submit" />
     </form>
+    gg
+    <c:forEach items="${arr}" var="item">
+        <tr>
+            <td>
+                ${item}
+            </td>
+        </tr>
+    </c:forEach>
 </body>
 </html>
