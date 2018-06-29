@@ -36,7 +36,7 @@
     <c:forEach items="${arr}" var="item">
         <tr>
             <td>
-                ${item}
+                ${item.hex_string_id}
             </td>
         </tr>
     </c:forEach>
