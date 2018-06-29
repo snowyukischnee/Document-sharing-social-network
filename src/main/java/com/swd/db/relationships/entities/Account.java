@@ -16,7 +16,11 @@ public class Account {
 
     protected String hex_string_id;
 
-    public Account(String hex_string_id) {
+    public String getHex_string_id() {
+        return hex_string_id;
+    }
+
+    public void setHex_string_id(String hex_string_id) {
         this.hex_string_id = hex_string_id;
     }
 

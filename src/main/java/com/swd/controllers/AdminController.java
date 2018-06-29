@@ -2,6 +2,7 @@ package com.swd.controllers;
 
 import com.swd.db.documents.entities.Account;
 import com.swd.db.documents.models.MongoDaoBaseClass;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -31,7 +32,7 @@ public class AdminController {
         List<String> roles = new ArrayList<>();
         roles.add("ROLE_USER");
         Account acc = new Account(
-                null,
+                new ObjectId(),
                 usrname,
                 HashedPassword,
                 roles,
@@ -43,6 +44,7 @@ public class AdminController {
                 false
         );
         accdao.Insert(acc);
+        System.out.println(acc.get_id().toString());
         return "redirect:/admin";
     }
 }

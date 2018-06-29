@@ -23,6 +23,7 @@ public class Account extends AccountBaseClass {
     @Override
     public Document ToDocument() {
         Document doc = new Document();
+        doc.append("_id", _id);
         doc.append("username", username);
         doc.append("password", password);
         doc.append("roles", roles);

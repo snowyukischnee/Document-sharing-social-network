@@ -29,10 +29,11 @@ public class MainController {
         Optional<Account> aa = accountRelationshipRepository.findById((long) 28);
         Account a = aa.get();
         System.out.println(a.friends);
-        Account b = new Account();
-        b.setHex_string_id("7777");
-        accountRelationshipRepository.save(b);
-        accountRelationshipRepository.CreateFriendRelationship(a, b);
+        //Account b = new Account();
+        //b.setHex_string_id("2346");
+        //accountRelationshipRepository.save(b);
+        //accountRelationshipRepository.CreateFriendRelationship(a, b);
+        //System.out.println(a.friends);
         return "index";
     }
 }

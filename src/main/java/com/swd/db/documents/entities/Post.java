@@ -21,6 +21,7 @@ public class Post extends MongoEntityBaseClass {
     @Override
     public Document ToDocument() {
         Document doc = new Document();
+        doc.append("_id", _id);
         doc.append("description", description);
         doc.append("dateCreated", dateCreated);
         doc.append("enabled", enabled);
