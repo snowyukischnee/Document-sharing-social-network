@@ -19,11 +19,8 @@ public class MainController {
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String index(ModelMap model) {
         AccountRelationship a = new AccountRelationship();
-        a.setHex_string_id("123456");
-        accountRelationshipRepository.save(a);
-        //List<AccountRelationship> arr = accountRelationshipRepository.GetFriends(a);
-        //System.out.println(arr);
-        //List<AccountRelationship> arr = accountRelationshipService.GetFriends(a);
+        //accountRelationshipRepository.CreateFriendRelationship("123456", "123457");
+        //List<AccountRelationship> arr = accountRelationshipRepository.GetFriendsByHexStringId("123456");
         //System.out.println(arr);
         //model.put("arr", arr);
         return "index";

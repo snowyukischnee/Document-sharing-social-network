@@ -8,20 +8,20 @@ import org.springframework.data.neo4j.transaction.Neo4jTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableNeo4jRepositories(basePackages = "com.swd.db.relationships.models")
+@EnableNeo4jRepositories(basePackages = Config.Neo4JRepositoryPackage)
 @EnableTransactionManagement
 public class Neo4jConfig {
 
     @Bean
     public SessionFactory sessionFactory() {
-        return new SessionFactory(configuration(), "com.swd.db.relationships.entities");
+        return new SessionFactory(configuration(), Config.Neo4JNodePackage);
     }
 
     @Bean
     public org.neo4j.ogm.config.Configuration configuration() {
         org.neo4j.ogm.config.Configuration configuration = new org.neo4j.ogm.config.Configuration.Builder()
-                .uri("bolt://localhost:7687")
-                .credentials("neo4j", "123456")
+                .uri(Config.Neo4JConnectionString)
+                .credentials(Config.Neo4JUsername, Config.Neo4JPassword)
                 .build();
         return configuration;
     }

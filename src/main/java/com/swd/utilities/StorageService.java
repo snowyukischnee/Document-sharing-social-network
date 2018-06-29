@@ -18,12 +18,12 @@ public class StorageService implements StorageImpl {
     }
 
     @Override
-    public void Save(MultipartFile file, String path, String uid, String sub_folder, String file_name) throws IOException {
+    public void Save(MultipartFile file, String path, String folder, String sub_folder, String file_name) throws IOException {
         if (file.isEmpty()) throw new IOException("File is invalid");
         MkDirIfnExist(path);
         path = path.concat(Config.BaseUploadDir + "/");
         MkDirIfnExist(path);
-        path = path.concat(uid + "/");
+        path = path.concat(folder + "/");
         MkDirIfnExist(path);
         path = path.concat(sub_folder + "/");
         MkDirIfnExist(path);
@@ -32,10 +32,10 @@ public class StorageService implements StorageImpl {
     }
 
     @Override
-    public List<File> ListFiles(String path, String uid, String sub_folder) {
+    public List<File> ListFiles(String path, String folder, String sub_folder) {
         List<File> arr = new ArrayList<File>();
         path = path.concat(Config.BaseUploadDir + "/");
-        path = path.concat(uid + "/");
+        path = path.concat(folder + "/");
         path = path.concat(sub_folder + "/");
         File file = new File(path);
         if(!file.exists()) {
@@ -47,9 +47,9 @@ public class StorageService implements StorageImpl {
     }
 
     @Override
-    public File GetFile(String path, String uid, String sub_folder, String filename) {
+    public File GetFile(String path, String folder, String sub_folder, String filename) {
         path = path.concat(Config.BaseUploadDir + "/");
-        path = path.concat(uid + "/");
+        path = path.concat(folder + "/");
         path = path.concat(sub_folder + "/");
         path = path.concat(filename);
         File file = new File(path);

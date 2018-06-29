@@ -22,30 +22,29 @@ import java.util.List;
 
 @Controller
 public class UploadController {
-    @RequestMapping(value = "/upload-{sub_folder}", method = RequestMethod.POST)
-    public String upload(@PathVariable("sub_folder") String sub_folder, @RequestParam("files") MultipartFile[] files, HttpServletRequest request) {
+    @RequestMapping(value = "/upload-{post_id}", method = RequestMethod.POST)
+    public void upload(@PathVariable("post_id") String post_id, @RequestParam("files") MultipartFile[] files, HttpServletRequest request) {
         StorageImpl storageService = new StorageService();
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String uid = userDetails.get_id().toString();
         String path = request.getServletContext().getRealPath("/");
         for(MultipartFile file : files) {
             try {
-                storageService.Save(file, path, uid, sub_folder, file.getOriginalFilename());
+                storageService.Save(file, path, "posts", post_id, file.getOriginalFilename());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
-        return "redirect:/index";
     }
 
-    @RequestMapping(value = "/download-{sub_folder}", method = RequestMethod.GET)
-    public void download(@PathVariable("sub_folder") String sub_folder, @RequestParam("file") String filename, HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/download-{post_id}", method = RequestMethod.GET)
+    public void download(@PathVariable("post_id") String post_id, @RequestParam("file") String filename, HttpServletRequest request, HttpServletResponse response) {
         StorageImpl storageService = new StorageService();
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String uid = userDetails.get_id().toString();
         String path = request.getServletContext().getRealPath("/");
         try {
-            File downloadFile = storageService.GetFile(path, uid, sub_folder, filename);
+            File downloadFile = storageService.GetFile(path, "posts", post_id, filename);
             FileInputStream inputStream = new FileInputStream(downloadFile);
             response.setContentType("application/octet-stream");
             response.setContentLength((int)downloadFile.length());
@@ -61,13 +60,13 @@ public class UploadController {
         }
     }
 
-    @RequestMapping(value = "/list-{sub_folder}", method = RequestMethod.GET)
-    public String list_uploaded(@PathVariable("sub_folder") String sub_folder, HttpServletRequest request, ModelMap model) {
+    @RequestMapping(value = "/list-{post_id}", method = RequestMethod.GET)
+    public String list_uploaded(@PathVariable("post_id") String post_id, HttpServletRequest request, ModelMap model) {
         StorageImpl storageService = new StorageService();
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String uid = userDetails.get_id().toString();
         String path = request.getServletContext().getRealPath("/");
-        List<File> arr = storageService.ListFiles(path, uid, sub_folder);
+        List<File> arr = storageService.ListFiles(path, "posts", post_id);
         model.addAttribute("files", arr);
         return "list";
     }
