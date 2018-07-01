@@ -1,7 +1,7 @@
 package com.swd.controllers;
 
 import com.swd.db.relationships.entities.Account;
-import com.swd.db.relationships.models.AccountRelationshipRepository;
+import com.swd.db.relationships.models.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -15,7 +15,7 @@ import java.util.Optional;
 public class MainController {
 
     @Autowired
-    AccountRelationshipRepository accountRelationshipRepository;
+    AccountRepository accountRepository;
 
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String index(ModelMap model) {
@@ -23,16 +23,16 @@ public class MainController {
         a.setHex_string_id("123456");
         Account b = new Account();
         b.setHex_string_id("00000");
-        accountRelationshipRepository.save(a);
-        accountRelationshipRepository.save(b);
-        accountRelationshipRepository.CreateFriendRelationship(a.getHex_string_id(), b.getHex_string_id());*/
-        Optional<Account> aa = accountRelationshipRepository.findById((long) 28);
+        accountRepository.save(a);
+        accountRepository.save(b);
+        accountRepository.CreateFriendRelationship(a.getHex_string_id(), b.getHex_string_id());*/
+        Optional<Account> aa = accountRepository.findById((long) 28);
         Account a = aa.get();
         System.out.println(a.friends);
         //Account b = new Account();
         //b.setHex_string_id("2346");
-        //accountRelationshipRepository.save(b);
-        //accountRelationshipRepository.CreateFriendRelationship(a, b);
+        //accountRepository.save(b);
+        //accountRepository.CreateFriendRelationship(a, b);
         //System.out.println(a.friends);
         return "index";
     }
