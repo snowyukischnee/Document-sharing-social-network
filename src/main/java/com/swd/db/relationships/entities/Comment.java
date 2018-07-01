@@ -6,10 +6,9 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
 import java.util.List;
-import java.util.Set;
 
 @NodeEntity
-public class Post {
+public class Comment {
     @Id
     @GeneratedValue
     protected Long id;
@@ -27,15 +26,6 @@ public class Post {
     @Relationship(type = "HAS_POSTED", direction = Relationship.INCOMING)
     public Account posted_by;
 
-    @Relationship(type = "AUTHOR_OF", direction = Relationship.INCOMING)
-    public List<Account> authors;
-
-    @Relationship(type = "HAS_FOLLOWED", direction = Relationship.INCOMING)
-    public List<Account> followed_by;
-
-    @Relationship(type = "HAS_REACTED", direction = Relationship.INCOMING)
-    public List<Account> reacted_by;
-
-    @Relationship(type = "COMMENT_OF", direction = Relationship.INCOMING)
-    public List<Comment> comments;
+    @Relationship(type = "COMMENT_OF", direction = Relationship.OUTGOING)
+    public Post comment_of;
 }

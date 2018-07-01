@@ -38,4 +38,13 @@ public class Account {
 
     @Relationship(type = "AUTHOR_OF", direction = Relationship.OUTGOING)
     public List<Post> authored_posts;
+
+    @Relationship(type = "HAS_FOLLOWED", direction = Relationship.OUTGOING)
+    public List<Post> followed_posts;
+
+    @Relationship(type = "HAS_REACTED", direction = Relationship.OUTGOING)
+    public List<Post> reacted_posts;
+
+    @Relationship(type = "HAS_POSTED", direction = Relationship.OUTGOING)
+    public List<Comment> posted_comments;
 }
