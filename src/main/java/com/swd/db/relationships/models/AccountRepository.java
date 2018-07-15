@@ -8,6 +8,9 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 
 public interface AccountRepository extends Neo4jRepository<Account, Long> {
 
+    @Query("match (a:Account) where a.hex_string_id = {0} return a")
+    Account findByHexId(String hex_id);
+
     @Query("match (a:Account), (b:Account) where id(a) = {0} and id(b) = {1} create (a)-[:FRIEND_OF]->(b), (b)-[:FRIEND_OF]->(a)")
     void CreateFriendRelationship(Account account_0, Account account_1);
 

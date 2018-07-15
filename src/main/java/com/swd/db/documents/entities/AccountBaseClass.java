@@ -7,15 +7,15 @@ import java.util.Date;
 import java.util.List;
 
 public class AccountBaseClass extends MongoEntityBaseClass {
-    protected String username;
+    protected String email;
     protected String password; // hashed
     protected List<String> roles;
     protected Date dateCreated;
     protected boolean enabled;
 
-    public AccountBaseClass(ObjectId _id, String username, String password, List<String> roles, Date dateCreated, boolean enabled) {
+    public AccountBaseClass(ObjectId _id, String email, String password, List<String> roles, Date dateCreated, boolean enabled) {
         super(_id);
-        this.username = username;
+        this.email = email;
         this.password = password;
         this.roles = roles;
         this.dateCreated = dateCreated;
@@ -26,7 +26,7 @@ public class AccountBaseClass extends MongoEntityBaseClass {
     public Document ToDocument() {
         Document doc = new Document();
         doc.append("_id", _id);
-        doc.append("username", username);
+        doc.append("email", email);
         doc.append("password", password);
         doc.append("roles", roles);
         doc.append("dateCreated", dateCreated);
@@ -34,9 +34,9 @@ public class AccountBaseClass extends MongoEntityBaseClass {
         return doc;
     }
 
-    public String getUsername() { return username; }
+    public String getEmail() { return email; }
 
-    public void setUsername(String username) { this.username = username; }
+    public void setEmail(String email) { this.email = email; }
 
     public String getPassword() { return password; }
 
