@@ -1,5 +1,7 @@
 package com.swd.viewmodels;
 
+import com.swd.db.documents.models.MongoDaoBaseClass;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.util.Date;
@@ -19,5 +21,26 @@ public class AccountViewModel {
         this.email = email;
         this.dob = dob;
         this.gender = gender;
+    }
+
+    public AccountViewModel(ObjectId _id) throws Exception {
+        MongoDaoBaseClass<com.swd.db.documents.entities.Account> accdao = new MongoDaoBaseClass<>("account");
+        Document doc = accdao.Find(new com.swd.db.documents.entities.Account(
+                _id,
+                null,
+                null,
+                null,
+                null,
+                true,
+                null,
+                null,
+                false)
+        );
+        if (doc == null) throw new Exception();
+        this._id = doc.getObjectId("_id");
+        this.name = doc.getString("name");
+        this.email = doc.getString("email");
+        this.dob = doc.getDate("dob");
+        this.gender = doc.getBoolean("gender");
     }
 }

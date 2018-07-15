@@ -1,11 +1,9 @@
 package com.swd.controllers;
 
 import com.google.gson.Gson;
-import com.mongodb.client.model.Filters;
 import com.swd.db.documents.models.MongoDaoBaseClass;
 import com.swd.security.CustomUserDetails;
 import com.swd.viewmodels.AccountViewModel;
-import com.swd.viewmodels.UserViewModel;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +30,20 @@ public class AccountController {
     public String list_users() {
         Gson gson = new Gson();
         MongoDaoBaseClass<com.swd.db.documents.entities.Account> accdao = new MongoDaoBaseClass<>("account");
-        List<Document> result = accdao.List(null);
-        return gson.toJson(result);
+        List<Document> list_acc = accdao.List(null);
+        List<AccountViewModel> list = new ArrayList<>();
+        for (Document doc: list_acc) {
+            try {
+                list.add(new AccountViewModel(doc.getObjectId("_id")));
+            } catch (Exception e) {
+                e.printStackTrace();
+                Map<String, String> result = new HashMap<>();
+                result.put("Status", "ERROR");
+                result.put("Message", "Can not list users");
+                return gson.toJson(result);
+            }
+        }
+        return gson.toJson(list);
     }
 
     @RequestMapping(value = "/not_logged_in", method = RequestMethod.GET)
@@ -45,57 +56,25 @@ public class AccountController {
         return gson.toJson(result);
     }
 
-    @RequestMapping(value = "/account_info", method = RequestMethod.GET)
-    @ResponseBody
-    public String account_info() {
-        Gson gson = new Gson();
-        MongoDaoBaseClass<com.swd.db.documents.entities.Account> accdao = new MongoDaoBaseClass<>("account");
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ObjectId _id = userDetails.get_id();
-        Document doc = accdao.Find(new com.swd.db.documents.entities.Account(
-                userDetails.get_id(),
-                null,
-                null,
-                null,
-                null,
-                userDetails.isEnabled(),
-                null,
-                null,
-                false)
-        );
-        AccountViewModel accountViewModel = new AccountViewModel(
-                doc.getObjectId("_id"),
-                doc.getString("name"),
-                doc.getString("email"),
-                doc.getDate("dob"),
-                doc.getBoolean("gender")
-        );
-        return gson.toJson(userDetails);
-    }
-
     @RequestMapping(value = "/user_info", method = RequestMethod.GET)
     @ResponseBody
-    public String user_info() {
+    public String account_info(@RequestParam(name = "_id", required = false) String _uid) {
         Gson gson = new Gson();
         MongoDaoBaseClass<com.swd.db.documents.entities.Account> accdao = new MongoDaoBaseClass<>("account");
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ObjectId _id = userDetails.get_id();
-        Document doc = accdao.Find(new com.swd.db.documents.entities.Account(
-                userDetails.get_id(),
-                null,
-                null,
-                null,
-                null,
-                userDetails.isEnabled(),
-                null,
-                null,
-                false)
-        );
-        UserViewModel userViewModel = new UserViewModel(
-                doc.getObjectId("_id"),
-                doc.getString("name")
-        );
-        return gson.toJson(userDetails);
+        ObjectId _id;
+        if (_uid == null || _uid == "") {
+            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            _id = userDetails.get_id();
+        } else {
+            _id = new ObjectId(_uid);
+        }
+        AccountViewModel accountViewModel = null;
+        try {
+            accountViewModel = new AccountViewModel(_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return gson.toJson(accountViewModel);
     }
 
     @RequestMapping(value = "/changepass", method = RequestMethod.POST)
