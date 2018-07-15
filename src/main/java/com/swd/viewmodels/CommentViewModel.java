@@ -22,8 +22,8 @@ public class CommentViewModel {
     }
 
     public CommentViewModel(ObjectId _id) throws Exception {
-        MongoDaoBaseClass<com.swd.db.documents.entities.Comment> accdao = new MongoDaoBaseClass<>("comment");
-        Document doc = accdao.Find(new com.swd.db.documents.entities.Comment(
+        MongoDaoBaseClass<com.swd.db.documents.entities.Comment> commentdao = new MongoDaoBaseClass<>("comment");
+        Document doc = commentdao.Find(new com.swd.db.documents.entities.Comment(
                 _id,
                 null,
                 null,

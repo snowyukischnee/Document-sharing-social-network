@@ -19,7 +19,7 @@
                 username-parameter="email"
                 password-parameter="password"
                 login-processing-url="/perform_login"
-                default-target-url="/user_info"
+                default-target-url="/account_info"
                 authentication-failure-url="/not_logged_in"
                 always-use-default-target="true"
         />

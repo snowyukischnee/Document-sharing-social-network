@@ -56,7 +56,7 @@ public class AccountController {
         return gson.toJson(result);
     }
 
-    @RequestMapping(value = "/user_info", method = RequestMethod.GET)
+    @RequestMapping(value = "/account_info", method = RequestMethod.GET)
     @ResponseBody
     public String account_info(@RequestParam(name = "_id", required = false) String _uid) {
         Gson gson = new Gson();
