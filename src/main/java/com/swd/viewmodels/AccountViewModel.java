@@ -7,7 +7,7 @@ import org.bson.types.ObjectId;
 import java.util.Date;
 
 public class AccountViewModel {
-    public ObjectId _id;
+    public String _id;
     public String name;
     public String email;
     public Date dob;
@@ -16,7 +16,7 @@ public class AccountViewModel {
     public AccountViewModel() { }
 
     public AccountViewModel(ObjectId _id, String name, String email, Date dob, boolean gender) {
-        this._id = _id;
+        this._id = _id.toHexString();
         this.name = name;
         this.email = email;
         this.dob = dob;
@@ -37,7 +37,7 @@ public class AccountViewModel {
                 false)
         );
         if (doc == null) throw new Exception();
-        this._id = doc.getObjectId("_id");
+        this._id = doc.getObjectId("_id").toHexString();
         this.name = doc.getString("name");
         this.email = doc.getString("email");
         this.dob = doc.getDate("dob");

@@ -7,7 +7,7 @@ import org.bson.types.ObjectId;
 import java.util.Date;
 
 public class CommentViewModel {
-    public ObjectId _id;
+    public String _id;
     public Date dateCreated;
     public String content;
     public boolean enabled;
@@ -15,7 +15,7 @@ public class CommentViewModel {
     public CommentViewModel() { }
 
     public CommentViewModel(ObjectId _id, Date dateCreated, String content, boolean enabled) {
-        this._id = _id;
+        this._id = _id.toHexString();
         this.dateCreated = dateCreated;
         this.content = content;
         this.enabled = enabled;
@@ -30,7 +30,7 @@ public class CommentViewModel {
                 true
         ));
         if (doc == null) throw new Exception();
-        this._id = doc.getObjectId("_id");
+        this._id = doc.getObjectId("_id").toHexString();
         this.dateCreated = doc.getDate("dateCreated");
         this.content = doc.getString("content");
         this.enabled = doc.getBoolean("enabled");
