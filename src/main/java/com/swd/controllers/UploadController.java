@@ -8,27 +8,21 @@ import com.swd.db.relationships.models.PostRepository;
 import com.swd.security.CustomUserDetails;
 import com.swd.utilities.StorageImpl;
 import com.swd.utilities.StorageService;
+import com.swd.viewmodels.FileViewModel;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class UploadController {
@@ -129,14 +123,16 @@ public class UploadController {
 
     @RequestMapping(value = "/list/{post_id}", method = RequestMethod.GET)
     @ResponseBody
-    public String list_uploaded(@PathVariable("post_id") String post_id, HttpServletRequest request, ModelMap model) {
+    public String list_uploaded(@PathVariable("post_id") String post_id, HttpServletRequest request) {
         Gson gson = new Gson();
         StorageImpl storageService = new StorageService();
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String uid = userDetails.get_id().toString();
         String path = request.getServletContext().getRealPath("/");
         List<File> arr = storageService.ListFiles(path, "posts", post_id);
-        model.addAttribute("files", arr);
-        return gson.toJson(arr);
+        ArrayList<FileViewModel> result = new ArrayList<>();
+        for (File file : arr) result.add(new FileViewModel(file.getName(), file.length()));
+        System.out.println(result);
+        return gson.toJson(result);
     }
 }

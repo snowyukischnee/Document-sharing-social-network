@@ -1,9 +1,13 @@
 package com.swd.controllers;
 
 import com.google.gson.Gson;
+import com.mongodb.client.model.Filters;
 import com.swd.db.documents.models.MongoDaoBaseClass;
 import com.swd.security.CustomUserDetails;
+import com.swd.viewmodels.AccountViewModel;
+import com.swd.viewmodels.UserViewModel;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,6 +26,15 @@ public class AccountController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @RequestMapping(value = "/list_users", method = RequestMethod.GET)
+    @ResponseBody
+    public String list_users() {
+        Gson gson = new Gson();
+        MongoDaoBaseClass<com.swd.db.documents.entities.Account> accdao = new MongoDaoBaseClass<>("account");
+        List<Document> result = accdao.List(null);
+        return gson.toJson(result);
+    }
+
     @RequestMapping(value = "/not_logged_in", method = RequestMethod.GET)
     @ResponseBody
     public String not_logged_in() {
@@ -32,11 +45,56 @@ public class AccountController {
         return gson.toJson(result);
     }
 
+    @RequestMapping(value = "/account_info", method = RequestMethod.GET)
+    @ResponseBody
+    public String account_info() {
+        Gson gson = new Gson();
+        MongoDaoBaseClass<com.swd.db.documents.entities.Account> accdao = new MongoDaoBaseClass<>("account");
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ObjectId _id = userDetails.get_id();
+        Document doc = accdao.Find(new com.swd.db.documents.entities.Account(
+                userDetails.get_id(),
+                null,
+                null,
+                null,
+                null,
+                userDetails.isEnabled(),
+                null,
+                null,
+                false)
+        );
+        AccountViewModel accountViewModel = new AccountViewModel(
+                doc.getObjectId("_id"),
+                doc.getString("name"),
+                doc.getString("email"),
+                doc.getDate("dob"),
+                doc.getBoolean("gender")
+        );
+        return gson.toJson(userDetails);
+    }
+
     @RequestMapping(value = "/user_info", method = RequestMethod.GET)
     @ResponseBody
     public String user_info() {
         Gson gson = new Gson();
+        MongoDaoBaseClass<com.swd.db.documents.entities.Account> accdao = new MongoDaoBaseClass<>("account");
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ObjectId _id = userDetails.get_id();
+        Document doc = accdao.Find(new com.swd.db.documents.entities.Account(
+                userDetails.get_id(),
+                null,
+                null,
+                null,
+                null,
+                userDetails.isEnabled(),
+                null,
+                null,
+                false)
+        );
+        UserViewModel userViewModel = new UserViewModel(
+                doc.getObjectId("_id"),
+                doc.getString("name")
+        );
         return gson.toJson(userDetails);
     }
 

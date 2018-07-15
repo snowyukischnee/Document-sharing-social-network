@@ -1,6 +1,7 @@
 package com.swd.db.documents.models;
 
 import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -8,6 +9,9 @@ import com.swd.config.Config;
 import com.swd.db.documents.entities.MongoEntityBaseClass;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MongoDaoBaseClass<T extends MongoEntityBaseClass> implements MongoDaoInterface<T>  {
 
@@ -41,4 +45,14 @@ public class MongoDaoBaseClass<T extends MongoEntityBaseClass> implements MongoD
 
     @Override
     public void Delete(T obj) { collection.findOneAndDelete(Filters.eq("_id", obj.get_id())); }
+
+    @Override
+    public List<Document> List(Bson filter) {
+        List<Document> arr = new ArrayList<>();
+        FindIterable<Document> docs = (filter != null) ? collection.find(filter) : collection.find();
+        for (Document doc: docs) {
+             arr.add(doc);
+        }
+        return arr;
+    }
 }

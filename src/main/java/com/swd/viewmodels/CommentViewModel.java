@@ -8,4 +8,12 @@ public class CommentViewModel {
     public ObjectId _id;
     public Date dateCreated;
     public String content;
+
+    public CommentViewModel() { }
+
+    public CommentViewModel(ObjectId _id, Date dateCreated, String content) {
+        this._id = _id;
+        this.dateCreated = dateCreated;
+        this.content = content;
+    }
 }
