@@ -26,7 +26,7 @@ public class AccountController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    @RequestMapping(value = "/list_users", method = RequestMethod.GET)
+    @RequestMapping(value = "/list/users", method = RequestMethod.GET)
     @ResponseBody
     public String list_users() {
         Gson gson = new Gson();

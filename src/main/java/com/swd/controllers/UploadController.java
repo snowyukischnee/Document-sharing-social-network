@@ -9,6 +9,7 @@ import com.swd.security.CustomUserDetails;
 import com.swd.utilities.StorageImpl;
 import com.swd.utilities.StorageService;
 import com.swd.viewmodels.FileViewModel;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,25 +39,53 @@ public class UploadController {
     public String upload(@RequestParam("data") String data, @RequestParam("files") MultipartFile[] files, HttpServletRequest request) {
         Gson gson = new Gson();
         Map<String, String> result = new HashMap<>();
+        MongoDaoBaseClass<com.swd.db.documents.entities.Account> accdao = new MongoDaoBaseClass<>("account");
         MongoDaoBaseClass<com.swd.db.documents.entities.Post> postdao = new MongoDaoBaseClass<>("post");
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         DateFormat jsfmt = new SimpleDateFormat("EE MMM d y");
-        Map<String, String> data_map = gson.fromJson(data, new TypeToken<Map<String, String>>(){}.getType());
-        System.out.println(data_map.get("title"));
-        System.out.println(data_map.get("publication_date"));
-        System.out.println(data_map.get("description"));
+        Map<String, Object> data_map = gson.fromJson(data, new TypeToken<Map<String, Object>>(){}.getType());
         //--------------------------------------------------------------------------------------------------------------
-        String title = data_map.get("title");
+        String title = data_map.get("title").toString();
         Date publicationDate = null;
         try {
-            publicationDate = jsfmt.parse(data_map.get("publication_date"));
+            publicationDate = jsfmt.parse(data_map.get("publication_date").toString());
         } catch (ParseException e) {
             e.printStackTrace();
             result.put("Status", "ERROR");
             result.put("Message", "Could not parse input");
             return gson.toJson(result);
         }
-        String description = data_map.get("description");
+        String description = data_map.get("description").toString();
+        List<String> authors_list_0 = gson.fromJson(data_map.get("authors").toString(), new TypeToken<ArrayList<String>>() {}.getType());
+        Set<String> authors_list = new HashSet<>();
+        for (String _uid: authors_list_0) authors_list.add(_uid);
+        System.out.println(authors_list);
+        for (String _uid: authors_list) {
+            Document doc = accdao.Find(new com.swd.db.documents.entities.Account(
+                    new ObjectId(_uid),
+                    null,
+                    null,
+                    null,
+                    null,
+                    true,
+                    null,
+                    null,
+                    false
+                    )
+            );
+            if (doc == null) {
+                result.put("Status", "ERROR");
+                result.put("Message", "User from authors list not exist");
+                return gson.toJson(result);
+            }
+        }
+        //--------------------------------------------------------------------------------------------------------------
+        if (files == null || files.length == 0) {
+            result.put("Status", "ERROR");
+            result.put("Message", "No file(s) selected");
+            return gson.toJson(result);
+        }
+        //--------------------------------------------------------------------------------------------------------------
         ObjectId _id = new ObjectId();
         com.swd.db.documents.entities.Post post = new com.swd.db.documents.entities.Post(_id, title, description, publicationDate, new Date(), true);
         postdao.Insert(post);
@@ -66,6 +95,9 @@ public class UploadController {
         postRepository.save(post_rel);
         com.swd.db.relationships.entities.Account acc_rel = accountRepository.findByHexId(userDetails.get_id().toHexString());
         accountRepository.Post(acc_rel, post_rel);
+        for (String _uid: authors_list) {
+            accountRepository.ClaimAuthor(accountRepository.findByHexId(_uid), post_rel);
+        }
         //--------------------------------------------------------------------------------------------------------------
         StorageImpl storageService = new StorageService();
         String uid = userDetails.get_id().toString();
@@ -121,7 +153,7 @@ public class UploadController {
         }
     }
 
-    @RequestMapping(value = "/list/{post_id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/list/files/{post_id}", method = RequestMethod.GET)
     @ResponseBody
     public String list_uploaded(@PathVariable("post_id") String post_id, HttpServletRequest request) {
         Gson gson = new Gson();
