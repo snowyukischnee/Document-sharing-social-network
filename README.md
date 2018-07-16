@@ -1,8 +1,8 @@
 requirements:
-	1.	jdk 8+ (this project use jdk 10)
-	2.	Spring 5.0.6.RELEASE
-	3.	Spring Security 5.0.5.RELEASE
-	4.	MongoDB Driver 3.6.4
+	1.	jdk 1.8
+	2.	NodeJS 8+
+	3.	Neo4J Community 3.4.1
+	4.	MongoDB Community 3.6.5
+	5.	Apache Tomcat 9
 note:
-	1.	"D:\Program Files\MongoDB\Server\3.6\bin\mongod.exe" --dbpath "C:\Users\TuanNH\Desktop\SMIP\database"
-	2.	demodb.users.json exported 'user' collection in 'demodb' database
+	Change "mongod.exe" path in "start.bat" and run the script to start DB Services
