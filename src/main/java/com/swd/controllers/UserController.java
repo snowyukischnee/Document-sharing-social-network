@@ -207,4 +207,22 @@ public class UserController {
         result.put("Message", "Friend request process successfully");
         return gson.toJson(result);
     }
+
+    @RequestMapping(value = "/user/posted_posts", method = RequestMethod.POST)
+    @ResponseBody
+    public String posted_posts(@RequestParam(name = "_id", required = false) String _uid) {
+        return "";
+    }
+
+    @RequestMapping(value = "/user/followed_posts", method = RequestMethod.POST)
+    @ResponseBody
+    public String followed_posts(@RequestParam(name = "_id", required = false) String _uid) {
+        return "";
+    }
+
+    @RequestMapping(value = "/user/author_of_posts", method = RequestMethod.POST)
+    @ResponseBody
+    public String author_of_posts(@RequestParam(name = "_id", required = false) String _uid) {
+        return "";
+    }
 }

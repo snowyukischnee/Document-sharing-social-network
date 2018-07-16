@@ -14,7 +14,6 @@ public class PostViewModel {
     public String title;
     public String description;
     public Date publicationDate;
-    public boolean enabled;
     public List<AccountViewModel> authors;
     public List<AccountViewModel> liked_by;
     public List<AccountViewModel> followed_by;
@@ -39,6 +38,5 @@ public class PostViewModel {
         this.description = doc.getString("description");
         this.publicationDate = doc.getDate("publicationDate");
         this.dateCreated = doc.getDate("dateCreated");
-        this.enabled = doc.getBoolean("enabled");
     }
 }
