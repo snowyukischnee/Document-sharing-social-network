@@ -28,4 +28,10 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
 
     @Query("match(a:Account), (b:Post) where id(a) = {0} and id(b) = {1} return exists((a)-[:HAS_FOLLOWED]->(b))")
     boolean isFolowed(Account account, Post post);
+
+    @Query("match (a:Account)-[r:HAS_FOLLOWED]->(b:Post) return b, count(distinct r) as num order by num desc skip {0} limit {1}")
+    List<Post> getMostFollowedPostsWBound(Integer lower_bound, Integer no_items);
+
+    @Query("match (a:Account)-[r:HAS_FOLLOWED]->(b:Post) return b, count(distinct r) as num order by num desc")
+    List<Post> getMostFollowedPosts();
 }

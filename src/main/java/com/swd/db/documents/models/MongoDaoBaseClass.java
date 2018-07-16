@@ -9,6 +9,7 @@ import com.swd.config.Config;
 import com.swd.db.documents.entities.MongoEntityBaseClass;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,11 +49,17 @@ public class MongoDaoBaseClass<T extends MongoEntityBaseClass> implements MongoD
 
     @Override
     public List<Document> List(Bson filter) {
-        List<Document> arr = new ArrayList<>();
+        List<Document> arr = null;
         FindIterable<Document> docs = (filter != null) ? collection.find(filter) : collection.find();
-        for (Document doc: docs) {
-             arr.add(doc);
-        }
+        arr = docs.into(new ArrayList<>());
         return arr;
+    }
+
+    public List<Document> List_custom() {
+        return null;
+    }
+
+    public Document Search_custom(ObjectId _id) {
+        return null;
     }
 }

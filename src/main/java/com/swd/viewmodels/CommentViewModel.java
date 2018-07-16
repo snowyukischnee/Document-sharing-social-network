@@ -30,6 +30,7 @@ public class CommentViewModel {
                 true
         ));
         if (doc == null) throw new Exception();
+        if (doc.getBoolean("enabled") == false) throw new Exception();
         this._id = doc.getObjectId("_id").toHexString();
         this.dateCreated = doc.getDate("dateCreated");
         this.content = doc.getString("content");

@@ -33,6 +33,7 @@ public class PostViewModel {
                 true
         ));
         if (doc == null) throw new Exception();
+        if (doc.getBoolean("enabled") == false) throw new Exception();
         this._id = doc.getObjectId("_id").toHexString();
         this.title = doc.getString("title");
         this.description = doc.getString("description");

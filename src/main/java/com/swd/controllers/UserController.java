@@ -167,4 +167,42 @@ public class UserController {
         }
         return gson.toJson(friend_requested_by_list);
     }
+
+    @RequestMapping(value = "/user/friend_request_process", method = RequestMethod.POST)
+    @ResponseBody
+    public String friend_request_process(@RequestParam(name = "_id", required = false) String _uid) {
+        Gson gson = new Gson();
+        ObjectId _id0, _id1;
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (_uid == null || _uid == "") {
+            _id1 = userDetails.get_id();
+        } else {
+            _id1 = new ObjectId(_uid);
+        }
+        _id0 = userDetails.get_id();
+        if (_id0.toHexString().equalsIgnoreCase(_id1.toHexString())) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "Can not send friend request to yourself");
+            return gson.toJson(result);
+        }
+        com.swd.db.relationships.entities.Account acc0_rel = accountRepository.findByHexId(_id0.toHexString());
+        com.swd.db.relationships.entities.Account acc1_rel = accountRepository.findByHexId(_id1.toHexString());
+        if (accountRepository.isFriend(acc0_rel, acc1_rel)) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "You are already friend");
+            return gson.toJson(result);
+        } else if (accountRepository.isFriendRequestReceived(acc0_rel, acc1_rel)) {
+            accountRepository.CreateFriendRelationship(acc0_rel, acc1_rel);
+        } else if (!accountRepository.isFriendRequestReceived(acc0_rel, acc1_rel) && !accountRepository.isFriendRequestSent(acc0_rel, acc1_rel)) {
+            accountRepository.SendFriendRequest(acc0_rel, acc1_rel);
+        } else if (!accountRepository.isFriendRequestReceived(acc0_rel, acc1_rel) && accountRepository.isFriendRequestSent(acc0_rel, acc1_rel)) {
+            accountRepository.DeleteFriendRequest(acc0_rel, acc1_rel);
+        }
+        Map<String, String> result = new HashMap<>();
+        result.put("Status", "OK");
+        result.put("Message", "Friend request process successfully");
+        return gson.toJson(result);
+    }
 }

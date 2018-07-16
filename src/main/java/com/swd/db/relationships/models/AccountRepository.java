@@ -41,7 +41,7 @@ public interface AccountRepository extends Neo4jRepository<Account, Long> {
     @Query("match (a:Account)-[r:FRIEND_OF]->(b:Account) where id(a) = {0} return b")
     List<Account> FindFriends(Account account);
 
-    @Query("match (a:Account), (b:Account) where id(a) = {0} and id(b) = {1} merge (a)-[:FRIEND_OF]->(b), (b)-[:FRIEND_OF]->(a)")
+    @Query("match (a:Account), (b:Account) where id(a) = {0} and id(b) = {1} merge (a)-[:FRIEND_OF]->(b) merge (b)-[:FRIEND_OF]->(a)")
     void CreateFriendRelationship(Account account_0, Account account_1);
 
     @Query("match (a:Account)-[r:FRIEND_OF]-(b:Account) where id(a) = {0} and id(b) = {1} delete r")
