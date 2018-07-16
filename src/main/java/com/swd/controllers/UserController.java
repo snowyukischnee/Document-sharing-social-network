@@ -1,15 +1,12 @@
 package com.swd.controllers;
 
 import com.google.gson.Gson;
-import com.swd.db.documents.entities.Account;
-import com.swd.db.documents.models.MongoDaoBaseClass;
 import com.swd.db.relationships.models.AccountRepository;
 import com.swd.security.CustomUserDetails;
 import com.swd.viewmodels.AccountViewModel;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,6 +23,72 @@ public class UserController {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @RequestMapping(value = "/user/is_friend", method = RequestMethod.POST)
+    @ResponseBody
+    public String is_friend(@RequestParam(name = "_id", required = false) String _uid) {
+        Gson gson = new Gson();
+        ObjectId _id0, _id1;
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (_uid == null || _uid == "") {
+            _id1 = userDetails.get_id();
+        } else {
+            _id1 = new ObjectId(_uid);
+        }
+        _id0 = userDetails.get_id();
+        com.swd.db.relationships.entities.Account acc0_rel = accountRepository.findByHexId(_id0.toHexString());
+        com.swd.db.relationships.entities.Account acc1_rel = accountRepository.findByHexId(_id1.toHexString());
+        Map<String, String> result = new HashMap<>();
+        result.put("Status", "OK");
+        result.put("Message", "Get friend relationship status successfully");
+        result.put("Result", String.valueOf(accountRepository.isFriend(acc0_rel, acc1_rel)));
+        result.put("UserId", _id1.toHexString());
+        return gson.toJson(result);
+    }
+
+    @RequestMapping(value = "/user/is_friend_request_sent", method = RequestMethod.POST)
+    @ResponseBody
+    public String is_friend_request_sent(@RequestParam(name = "_id", required = false) String _uid) {
+        Gson gson = new Gson();
+        ObjectId _id0, _id1;
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (_uid == null || _uid == "") {
+            _id1 = userDetails.get_id();
+        } else {
+            _id1 = new ObjectId(_uid);
+        }
+        _id0 = userDetails.get_id();
+        com.swd.db.relationships.entities.Account acc0_rel = accountRepository.findByHexId(_id0.toHexString());
+        com.swd.db.relationships.entities.Account acc1_rel = accountRepository.findByHexId(_id1.toHexString());
+        Map<String, String> result = new HashMap<>();
+        result.put("Status", "OK");
+        result.put("Message", "Get friend request sent status successfully");
+        result.put("Result", String.valueOf(accountRepository.isFriendRequestSent(acc0_rel, acc1_rel)));
+        result.put("UserId", _id1.toHexString());
+        return gson.toJson(result);
+    }
+
+    @RequestMapping(value = "/user/is_friend_request_received", method = RequestMethod.POST)
+    @ResponseBody
+    public String is_friend_request_received(@RequestParam(name = "_id", required = false) String _uid) {
+        Gson gson = new Gson();
+        ObjectId _id0, _id1;
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (_uid == null || _uid == "") {
+            _id1 = userDetails.get_id();
+        } else {
+            _id1 = new ObjectId(_uid);
+        }
+        _id0 = userDetails.get_id();
+        com.swd.db.relationships.entities.Account acc0_rel = accountRepository.findByHexId(_id0.toHexString());
+        com.swd.db.relationships.entities.Account acc1_rel = accountRepository.findByHexId(_id1.toHexString());
+        Map<String, String> result = new HashMap<>();
+        result.put("Status", "OK");
+        result.put("Message", "Get friend request received status successfully");
+        result.put("Result", String.valueOf(accountRepository.isFriendRequestReceived(acc0_rel, acc1_rel)));
+        result.put("UserId", _id1.toHexString());
+        return gson.toJson(result);
+    }
 
     @RequestMapping(value = "/user/friend_list", method = RequestMethod.POST)
     @ResponseBody
@@ -46,7 +109,8 @@ public class UserController {
         } catch (Exception e) {
             Map<String, String> result = new HashMap<>();
             result.put("Status", "ERROR");
-            result.put("Message", "Could not get user data");
+            result.put("Message", "Could not get friend list");
+            result.put("UserId", _id.toHexString());
             return gson.toJson(result);
         }
         return gson.toJson(friend_list);
@@ -71,7 +135,8 @@ public class UserController {
         } catch (Exception e) {
             Map<String, String> result = new HashMap<>();
             result.put("Status", "ERROR");
-            result.put("Message", "Could not get user data");
+            result.put("Message", "Could not get friend request list");
+            result.put("UserId", _id.toHexString());
             return gson.toJson(result);
         }
         return gson.toJson(friend_request_list);
@@ -96,7 +161,8 @@ public class UserController {
         } catch (Exception e) {
             Map<String, String> result = new HashMap<>();
             result.put("Status", "ERROR");
-            result.put("Message", "Could not get user data");
+            result.put("Message", "Could not get friend requested by list");
+            result.put("UserId", _id.toHexString());
             return gson.toJson(result);
         }
         return gson.toJson(friend_requested_by_list);

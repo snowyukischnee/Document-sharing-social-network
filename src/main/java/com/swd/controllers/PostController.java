@@ -108,4 +108,34 @@ public class PostController {
         result.put("Message", "Follow/Unfollow successfully");
         return gson.toJson(result);
     }
+
+    @RequestMapping(value = "/post/is_reacted", method = RequestMethod.POST)
+    @ResponseBody
+    public String is_reacted(@RequestParam("_id") String _pid) {
+        Gson gson = new Gson();
+        Map<String, String> result = new HashMap<>();
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        com.swd.db.relationships.entities.Post post_rel = postRepository.findByHexId(_pid);
+        com.swd.db.relationships.entities.Account acc_rel = accountRepository.findByHexId(userDetails.get_id().toHexString());
+        result.put("Status", "OK");
+        result.put("Message", "Get reacted status successfully");
+        result.put("PostId", _pid);
+        result.put("Result", String.valueOf(postRepository.isReacted(acc_rel, post_rel)));
+        return gson.toJson(result);
+    }
+
+    @RequestMapping(value = "/post/is_followed", method = RequestMethod.POST)
+    @ResponseBody
+    public String is_followed(@RequestParam("_id") String _pid) {
+        Gson gson = new Gson();
+        Map<String, String> result = new HashMap<>();
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        com.swd.db.relationships.entities.Post post_rel = postRepository.findByHexId(_pid);
+        com.swd.db.relationships.entities.Account acc_rel = accountRepository.findByHexId(userDetails.get_id().toHexString());
+        result.put("Status", "OK");
+        result.put("Message", "Get follow status successfully");
+        result.put("PostId", _pid);
+        result.put("Result", String.valueOf(postRepository.isFolowed(acc_rel, post_rel)));
+        return gson.toJson(result);
+    }
 }

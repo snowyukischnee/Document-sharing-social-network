@@ -22,4 +22,10 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
 
     @Query("match(a:Account)-[:HAS_FOLLOWED]->(b:Post) where id(a) = {0} return b")
     List<Post> findPostsByFollowed(Account account);
+
+    @Query("match(a:Account), (b:Post) where id(a) = {0} and id(b) = {1} return exists((a)-[:HAS_REACTED]->(b))")
+    boolean isReacted(Account account, Post post);
+
+    @Query("match(a:Account), (b:Post) where id(a) = {0} and id(b) = {1} return exists((a)-[:HAS_FOLLOWED]->(b))")
+    boolean isFolowed(Account account, Post post);
 }

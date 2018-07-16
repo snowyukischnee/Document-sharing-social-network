@@ -1,4 +1,5 @@
 .idea/
 target/
 database/
+neo4j/
 */node_modules/

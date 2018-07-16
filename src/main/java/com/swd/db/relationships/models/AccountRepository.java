@@ -50,6 +50,9 @@ public interface AccountRepository extends Neo4jRepository<Account, Long> {
     @Query("match (a:Account),(b:Account) where id(a) = {0} and id(b) = {1} return exists((a)-[:FRIEND_REQUEST]->(b))")
     boolean isFriendRequestSent(Account account_0, Account account_1);
 
+    @Query("match (a:Account),(b:Account) where id(a) = {0} and id(b) = {1} return exists((b)-[:FRIEND_REQUEST]->(a))")
+    boolean isFriendRequestReceived(Account account_0, Account account_1);
+
     @Query("match (a:Account)-[r:FRIEND_REQUEST]->(b:Account) where id(b) = {0} return a")
     List<Account> FindFriendRequestedBy(Account account);
 
