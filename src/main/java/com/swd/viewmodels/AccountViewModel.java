@@ -15,15 +15,7 @@ public class AccountViewModel {
 
     public AccountViewModel() { }
 
-    public AccountViewModel(ObjectId _id, String name, String email, Date dob, boolean gender) {
-        this._id = _id.toHexString();
-        this.name = name;
-        this.email = email;
-        this.dob = dob;
-        this.gender = gender;
-    }
-
-    public AccountViewModel(ObjectId _id) throws Exception {
+    public AccountViewModel(ObjectId _id) throws NullPointerException {
         MongoDaoBaseClass<com.swd.db.documents.entities.Account> accdao = new MongoDaoBaseClass<>("account");
         Document doc = accdao.Find(new com.swd.db.documents.entities.Account(
                 _id,
@@ -36,7 +28,7 @@ public class AccountViewModel {
                 null,
                 false)
         );
-        if (doc == null) throw new Exception();
+        if (doc == null) throw new NullPointerException();
         this._id = doc.getObjectId("_id").toHexString();
         this.name = doc.getString("name");
         this.email = doc.getString("email");

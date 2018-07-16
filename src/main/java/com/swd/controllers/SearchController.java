@@ -5,7 +5,9 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
 import com.swd.db.documents.models.MongoDaoBaseClass;
+import com.swd.db.relationships.models.AccountRepository;
 import com.swd.db.relationships.models.PostRepository;
+import com.swd.viewmodels.AccountViewModel;
 import com.swd.viewmodels.PostViewModel;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -24,8 +26,13 @@ import java.util.regex.Pattern;
 
 @Controller
 public class SearchController {
+
+    @Autowired
+    AccountRepository accountRepository;
+
     @Autowired
     PostRepository postRepository;
+
 
     @RequestMapping(value = "/search/documents", method = RequestMethod.GET)
     @ResponseBody
@@ -167,6 +174,53 @@ public class SearchController {
             Map<String, String> result_e = new HashMap<>();
             result_e.put("Status", "ERROR");
             result_e.put("Message", "Operation not supported yet");
+            return gson.toJson(result_e);
+        }
+        return gson.toJson(result);
+    }
+
+    @RequestMapping(value = "/search/users", method = RequestMethod.GET)
+    @ResponseBody
+    public String search(
+            @RequestParam(name = "lbound", required = false) Integer lower_bound,
+            @RequestParam(name = "no_items", required = false) Integer no_items,
+            @RequestParam(name = "query", required = false) String query) {
+        Gson gson = new Gson();
+        List<AccountViewModel> result = new ArrayList<>();
+        MongoDaoBaseClass<com.swd.db.documents.entities.Account> accdao = new MongoDaoBaseClass<com.swd.db.documents.entities.Account>("account") {
+            @Override
+            public List<Document> List_custom() {
+                List<Document> arr = null;
+                FindIterable<Document> docs = null;
+                if (query != null) {
+                    Pattern regex = Pattern.compile(query, Pattern.CASE_INSENSITIVE);
+                    docs = collection.find(
+                            Filters.and(
+                                    Filters.or(
+                                            Filters.eq("email", regex),
+                                            Filters.eq("name", regex)
+                                    )
+                            )
+                    ).sort(Sorts.descending("name"));
+                } else {
+                    docs = collection.find(
+                    ).sort(Sorts.descending("name"));
+                }
+                if (lower_bound != null & no_items != null) {
+                    docs = docs.skip(lower_bound).limit(no_items);
+                }
+                arr = docs.into(new ArrayList<>());
+                return arr;
+            }
+        };
+        List<Document> arr = accdao.List_custom();
+        try {
+            for (Document doc : arr) result.add(new AccountViewModel(doc.getObjectId("_id")));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, String> result_e = new HashMap<>();
+            result_e.put("Status", "ERROR");
+            result_e.put("Message", "Failed to search");
             return gson.toJson(result_e);
         }
         return gson.toJson(result);

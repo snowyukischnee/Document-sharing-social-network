@@ -43,13 +43,13 @@ public class CommentController {
         for (com.swd.db.relationships.entities.Comment comment_rel : comment_list_rel) {
             try {
                 list.add(new CommentViewModel(new ObjectId(comment_rel.getHex_string_id())));
-            } catch (Exception e) {
+            } catch (NullPointerException e) {
                 e.printStackTrace();
                 result.put("Status", "ERROR");
                 result.put("Message", "Can not list comment");
                 result.put("PostId", _pid);
                 return gson.toJson(result);
-            }
+            } catch (IllegalStateException e) { }
         }
         return gson.toJson(list);
     }

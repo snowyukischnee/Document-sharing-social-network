@@ -22,7 +22,7 @@ public class PostViewModel {
     public PostViewModel() {
     }
 
-    public PostViewModel(ObjectId _id) throws Exception {
+    public PostViewModel(ObjectId _id) throws NullPointerException, IllegalStateException {
         MongoDaoBaseClass<com.swd.db.documents.entities.Post> postdao = new MongoDaoBaseClass<>("post");
         Document doc = postdao.Find(new com.swd.db.documents.entities.Post(
                 _id,
@@ -32,8 +32,8 @@ public class PostViewModel {
                 null,
                 true
         ));
-        if (doc == null) throw new Exception();
-        if (doc.getBoolean("enabled") == false) throw new Exception();
+        if (doc == null) throw new NullPointerException();
+        if (doc.getBoolean("enabled") == false) throw new IllegalStateException();
         this._id = doc.getObjectId("_id").toHexString();
         this.title = doc.getString("title");
         this.description = doc.getString("description");

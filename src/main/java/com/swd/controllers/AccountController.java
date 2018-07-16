@@ -25,27 +25,6 @@ public class AccountController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    @RequestMapping(value = "/list/users", method = RequestMethod.GET)
-    @ResponseBody
-    public String list_users() {
-        Gson gson = new Gson();
-        MongoDaoBaseClass<com.swd.db.documents.entities.Account> accdao = new MongoDaoBaseClass<>("account");
-        List<Document> list_acc = accdao.List(null);
-        List<AccountViewModel> list = new ArrayList<>();
-        for (Document doc: list_acc) {
-            try {
-                list.add(new AccountViewModel(doc.getObjectId("_id")));
-            } catch (Exception e) {
-                e.printStackTrace();
-                Map<String, String> result = new HashMap<>();
-                result.put("Status", "ERROR");
-                result.put("Message", "Can not list users");
-                return gson.toJson(result);
-            }
-        }
-        return gson.toJson(list);
-    }
-
     @RequestMapping(value = "/not_logged_in", method = RequestMethod.GET)
     @ResponseBody
     public String not_logged_in() {

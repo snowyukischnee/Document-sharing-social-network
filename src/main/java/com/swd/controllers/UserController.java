@@ -104,14 +104,16 @@ public class UserController {
         com.swd.db.relationships.entities.Account acc_rel = accountRepository.findByHexId(_id.toHexString());
         List<com.swd.db.relationships.entities.Account> friend_list_rel = accountRepository.FindFriends(acc_rel);
         List<AccountViewModel> friend_list = new ArrayList<>();
-        try {
-            for (com.swd.db.relationships.entities.Account friend_list_r : friend_list_rel) friend_list.add(new AccountViewModel(new ObjectId(friend_list_r.getHex_string_id())));
-        } catch (Exception e) {
-            Map<String, String> result = new HashMap<>();
-            result.put("Status", "ERROR");
-            result.put("Message", "Could not get friend list");
-            result.put("UserId", _id.toHexString());
-            return gson.toJson(result);
+        for (com.swd.db.relationships.entities.Account friend_list_r : friend_list_rel) {
+            try {
+                friend_list.add(new AccountViewModel(new ObjectId(friend_list_r.getHex_string_id())));
+            } catch (Exception e) {
+                Map<String, String> result = new HashMap<>();
+                result.put("Status", "ERROR");
+                result.put("Message", "Could not get friend list");
+                result.put("UserId", _id.toHexString());
+                return gson.toJson(result);
+            }
         }
         return gson.toJson(friend_list);
     }
