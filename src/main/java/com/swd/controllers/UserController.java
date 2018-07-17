@@ -2,6 +2,8 @@ package com.swd.controllers;
 
 import com.google.gson.Gson;
 import com.swd.db.relationships.models.AccountRepository;
+import com.swd.db.relationships.models.CommentRepository;
+import com.swd.db.relationships.models.PostRepository;
 import com.swd.security.CustomUserDetails;
 import com.swd.viewmodels.AccountViewModel;
 import org.bson.types.ObjectId;
@@ -23,6 +25,12 @@ public class UserController {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
+    PostRepository postRepository;
 
     @RequestMapping(value = "/user/is_friend", method = RequestMethod.POST)
     @ResponseBody
@@ -211,6 +219,7 @@ public class UserController {
     @RequestMapping(value = "/user/posted_posts", method = RequestMethod.POST)
     @ResponseBody
     public String posted_posts(@RequestParam(name = "_id", required = false) String _uid) {
+        
         return "";
     }
 

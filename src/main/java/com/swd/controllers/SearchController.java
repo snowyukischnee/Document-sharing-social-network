@@ -6,6 +6,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
 import com.swd.db.documents.models.MongoDaoBaseClass;
 import com.swd.db.relationships.models.AccountRepository;
+import com.swd.db.relationships.models.CommentRepository;
 import com.swd.db.relationships.models.PostRepository;
 import com.swd.viewmodels.AccountViewModel;
 import com.swd.viewmodels.PostViewModel;
@@ -29,6 +30,9 @@ public class SearchController {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
 
     @Autowired
     PostRepository postRepository;
@@ -76,7 +80,7 @@ public class SearchController {
             };
             List<Document> arr = postdao.List_custom();
             try {
-                for (Document doc : arr) result.add(new PostViewModel(doc.getObjectId("_id")));
+                for (Document doc : arr) result.add(new PostViewModel(doc.getObjectId("_id"), accountRepository, commentRepository, postRepository));
             } catch (Exception e) {
                 e.printStackTrace();
                 Map<String, String> result_e = new HashMap<>();
@@ -115,7 +119,7 @@ public class SearchController {
             };
             List<Document> arr = postdao.List_custom();
             try {
-                for (Document doc : arr) result.add(new PostViewModel(doc.getObjectId("_id")));
+                for (Document doc : arr) result.add(new PostViewModel(doc.getObjectId("_id"), accountRepository, commentRepository, postRepository));
             } catch (Exception e) {
                 e.printStackTrace();
                 Map<String, String> result_e = new HashMap<>();
@@ -161,7 +165,7 @@ public class SearchController {
             try {
                 for (com.swd.db.relationships.entities.Post post_rel : arr_rel) {
                     Document doc = postdao.Search_custom(new ObjectId(post_rel.getHex_string_id()));
-                    if (doc != null) result.add(new PostViewModel(new ObjectId(post_rel.getHex_string_id())));
+                    if (doc != null) result.add(new PostViewModel(new ObjectId(post_rel.getHex_string_id()), accountRepository, commentRepository, postRepository));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

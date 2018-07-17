@@ -36,7 +36,7 @@ public class PostController {
         Gson gson = new Gson();
         PostViewModel post;
         try {
-            post = new PostViewModel(new ObjectId(post_id));
+            post = new PostViewModel(new ObjectId(post_id), accountRepository, commentRepository, postRepository);
         } catch (Exception e) {
             e.printStackTrace();
             Map<String, String> result = new HashMap<>();
@@ -45,32 +45,6 @@ public class PostController {
             result.put("PostId", post_id);
             return gson.toJson(result);
         }
-        com.swd.db.relationships.entities.Post post_rel = postRepository.findByHexId(post_id);
-        com.swd.db.relationships.entities.Account owner_rel = accountRepository.findOwnerByPost(post_rel);
-        List<com.swd.db.relationships.entities.Account> authors_rel = accountRepository.findAuthorsByPost(post_rel);
-        List<com.swd.db.relationships.entities.Account> liked_by_rel = accountRepository.findReactedByPost(post_rel);
-        List<com.swd.db.relationships.entities.Account> followed_by_rel = accountRepository.findFollowedByPost(post_rel);
-        AccountViewModel owner = null;
-        List<AccountViewModel> authors = new ArrayList<>();
-        List<AccountViewModel> liked_by = new ArrayList<>();
-        List<AccountViewModel> followed_by = new ArrayList<>();
-        try {
-            owner = new AccountViewModel(new ObjectId(owner_rel.getHex_string_id()));
-            for (com.swd.db.relationships.entities.Account author_rel : authors_rel) authors.add(new AccountViewModel(new ObjectId(author_rel.getHex_string_id())));
-            for (com.swd.db.relationships.entities.Account liked_by_r : liked_by_rel) liked_by.add(new AccountViewModel(new ObjectId(liked_by_r.getHex_string_id())));
-            for (com.swd.db.relationships.entities.Account followed_by_r : followed_by_rel) followed_by.add(new AccountViewModel(new ObjectId(followed_by_r.getHex_string_id())));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Map<String, String> result = new HashMap<>();
-            result.put("Status", "ERROR");
-            result.put("Message", "Could not get post data");
-            result.put("PostId", post_id);
-            return gson.toJson(result);
-        }
-        post.posted_by = owner;
-        post.authors = authors;
-        post.liked_by = liked_by;
-        post.followed_by = followed_by;
         return gson.toJson(post);
     }
 
