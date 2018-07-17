@@ -9,6 +9,7 @@ import com.swd.security.CustomUserDetails;
 import com.swd.utilities.StorageImpl;
 import com.swd.utilities.StorageService;
 import com.swd.viewmodels.FileViewModel;
+import com.swd.viewmodels.PostSummViewModel;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,9 +125,6 @@ public class UploadController {
     public String download(@PathVariable("post_id") String post_id, @RequestParam("file") String filename, HttpServletRequest request, HttpServletResponse response) {
         StorageImpl storageService = new StorageService();
         Gson gson = new Gson();
-        Map<String, String> result = new HashMap<>();
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String uid = userDetails.get_id().toString();
         String path = request.getServletContext().getRealPath("/");
         try {
             File downloadFile = storageService.GetFile(path, "posts", post_id, filename);
@@ -140,31 +138,36 @@ public class UploadController {
             while ((bytesRead = inputStream.read(buffer)) != -1) outStream.write(buffer, 0, bytesRead);
             inputStream.close();
             outStream.close();
-            result.put("Status", "OK");
-            result.put("Message", "Download files not error");
-            result.put("PostId", post_id);
-            return gson.toJson(result);
         } catch (Exception e) {
             e.printStackTrace();
+            Map<String, String> result = new HashMap<>();
             result.put("Status", "ERROR");
-            result.put("Message", "Could not download files");
-            result.put("PostId", post_id);
+            result.put("Message", "Could not download file or file not found");
             return gson.toJson(result);
         }
+        Map<String, String> result = new HashMap<>();
+        result.put("Status", "OK");
+        result.put("Message", "Download successfully");
+        return gson.toJson(result);
     }
 
     @RequestMapping(value = "/list/files/{post_id}", method = RequestMethod.GET)
     @ResponseBody
     public String list_uploaded(@PathVariable("post_id") String post_id, HttpServletRequest request) {
         Gson gson = new Gson();
+        try {
+            PostSummViewModel postSummViewModel = new PostSummViewModel(new ObjectId(post_id));
+        } catch (Exception e) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "Could list files of post");
+            return gson.toJson(result);
+        }
         StorageImpl storageService = new StorageService();
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String uid = userDetails.get_id().toString();
         String path = request.getServletContext().getRealPath("/");
         List<File> arr = storageService.ListFiles(path, "posts", post_id);
         ArrayList<FileViewModel> result = new ArrayList<>();
         for (File file : arr) result.add(new FileViewModel(file.getName(), file.length()));
-        System.out.println(result);
         return gson.toJson(result);
     }
 }

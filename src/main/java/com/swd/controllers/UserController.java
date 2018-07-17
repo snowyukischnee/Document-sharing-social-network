@@ -5,15 +5,13 @@ import com.swd.db.relationships.models.AccountRepository;
 import com.swd.db.relationships.models.CommentRepository;
 import com.swd.db.relationships.models.PostRepository;
 import com.swd.security.CustomUserDetails;
+import com.swd.viewmodels.AccountSummViewModel;
 import com.swd.viewmodels.AccountViewModel;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,18 +32,20 @@ public class UserController {
 
     @RequestMapping(value = "/user/is_friend", method = RequestMethod.POST)
     @ResponseBody
-    public String is_friend(@RequestParam(name = "_id", required = false) String _uid) {
+    public String is_friend(@RequestParam("_id") String _uid) {
         Gson gson = new Gson();
         ObjectId _id0, _id1;
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (_uid == null || _uid == "") {
-            _id1 = userDetails.get_id();
-        } else {
-            _id1 = new ObjectId(_uid);
-        }
+        _id1 = new ObjectId(_uid);
         _id0 = userDetails.get_id();
         com.swd.db.relationships.entities.Account acc0_rel = accountRepository.findByHexId(_id0.toHexString());
         com.swd.db.relationships.entities.Account acc1_rel = accountRepository.findByHexId(_id1.toHexString());
+        if (acc0_rel == null || acc1_rel == null) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "User not found");
+            return gson.toJson(result);
+        }
         Map<String, String> result = new HashMap<>();
         result.put("Status", "OK");
         result.put("Message", "Get friend relationship status successfully");
@@ -56,18 +56,20 @@ public class UserController {
 
     @RequestMapping(value = "/user/is_friend_request_sent", method = RequestMethod.POST)
     @ResponseBody
-    public String is_friend_request_sent(@RequestParam(name = "_id", required = false) String _uid) {
+    public String is_friend_request_sent(@RequestParam("_id") String _uid) {
         Gson gson = new Gson();
         ObjectId _id0, _id1;
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (_uid == null || _uid == "") {
-            _id1 = userDetails.get_id();
-        } else {
-            _id1 = new ObjectId(_uid);
-        }
+        _id1 = new ObjectId(_uid);
         _id0 = userDetails.get_id();
         com.swd.db.relationships.entities.Account acc0_rel = accountRepository.findByHexId(_id0.toHexString());
         com.swd.db.relationships.entities.Account acc1_rel = accountRepository.findByHexId(_id1.toHexString());
+        if (acc0_rel == null || acc1_rel == null) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "User not found");
+            return gson.toJson(result);
+        }
         Map<String, String> result = new HashMap<>();
         result.put("Status", "OK");
         result.put("Message", "Get friend request sent status successfully");
@@ -78,18 +80,20 @@ public class UserController {
 
     @RequestMapping(value = "/user/is_friend_request_received", method = RequestMethod.POST)
     @ResponseBody
-    public String is_friend_request_received(@RequestParam(name = "_id", required = false) String _uid) {
+    public String is_friend_request_received(@RequestParam("_id") String _uid) {
         Gson gson = new Gson();
         ObjectId _id0, _id1;
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (_uid == null || _uid == "") {
-            _id1 = userDetails.get_id();
-        } else {
-            _id1 = new ObjectId(_uid);
-        }
+        _id1 = new ObjectId(_uid);
         _id0 = userDetails.get_id();
         com.swd.db.relationships.entities.Account acc0_rel = accountRepository.findByHexId(_id0.toHexString());
         com.swd.db.relationships.entities.Account acc1_rel = accountRepository.findByHexId(_id1.toHexString());
+        if (acc0_rel == null || acc1_rel == null) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "User not found");
+            return gson.toJson(result);
+        }
         Map<String, String> result = new HashMap<>();
         result.put("Status", "OK");
         result.put("Message", "Get friend request received status successfully");
@@ -98,97 +102,13 @@ public class UserController {
         return gson.toJson(result);
     }
 
-    @RequestMapping(value = "/user/friend_list", method = RequestMethod.POST)
-    @ResponseBody
-    public String friend_list(@RequestParam(name = "_id", required = false) String _uid) {
-        Gson gson = new Gson();
-        ObjectId _id;
-        if (_uid == null || _uid == "") {
-            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            _id = userDetails.get_id();
-        } else {
-            _id = new ObjectId(_uid);
-        }
-        com.swd.db.relationships.entities.Account acc_rel = accountRepository.findByHexId(_id.toHexString());
-        List<com.swd.db.relationships.entities.Account> friend_list_rel = accountRepository.FindFriends(acc_rel);
-        List<AccountViewModel> friend_list = new ArrayList<>();
-        for (com.swd.db.relationships.entities.Account friend_list_r : friend_list_rel) {
-            try {
-                friend_list.add(new AccountViewModel(new ObjectId(friend_list_r.getHex_string_id())));
-            } catch (Exception e) {
-                Map<String, String> result = new HashMap<>();
-                result.put("Status", "ERROR");
-                result.put("Message", "Could not get friend list");
-                result.put("UserId", _id.toHexString());
-                return gson.toJson(result);
-            }
-        }
-        return gson.toJson(friend_list);
-    }
-
-    @RequestMapping(value = "/user/friend_request_list", method = RequestMethod.POST)
-    @ResponseBody
-    public String friend_request_list(@RequestParam(name = "_id", required = false) String _uid) {
-        Gson gson = new Gson();
-        ObjectId _id;
-        if (_uid == null || _uid == "") {
-            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            _id = userDetails.get_id();
-        } else {
-            _id = new ObjectId(_uid);
-        }
-        com.swd.db.relationships.entities.Account acc_rel = accountRepository.findByHexId(_id.toHexString());
-        List<com.swd.db.relationships.entities.Account> friend_request_list_rel = accountRepository.FindFriendRequest(acc_rel);
-        List<AccountViewModel> friend_request_list = new ArrayList<>();
-        try {
-            for (com.swd.db.relationships.entities.Account friend_request_list_r : friend_request_list_rel) friend_request_list.add(new AccountViewModel(new ObjectId(friend_request_list_r.getHex_string_id())));
-        } catch (Exception e) {
-            Map<String, String> result = new HashMap<>();
-            result.put("Status", "ERROR");
-            result.put("Message", "Could not get friend request list");
-            result.put("UserId", _id.toHexString());
-            return gson.toJson(result);
-        }
-        return gson.toJson(friend_request_list);
-    }
-
-    @RequestMapping(value = "/user/friend_requested_by_list", method = RequestMethod.POST)
-    @ResponseBody
-    public String friend_requested_by_list(@RequestParam(name = "_id", required = false) String _uid) {
-        Gson gson = new Gson();
-        ObjectId _id;
-        if (_uid == null || _uid == "") {
-            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            _id = userDetails.get_id();
-        } else {
-            _id = new ObjectId(_uid);
-        }
-        com.swd.db.relationships.entities.Account acc_rel = accountRepository.findByHexId(_id.toHexString());
-        List<com.swd.db.relationships.entities.Account> friend_requested_by_list_rel = accountRepository.FindFriendRequestedBy(acc_rel);
-        List<AccountViewModel> friend_requested_by_list = new ArrayList<>();
-        try {
-            for (com.swd.db.relationships.entities.Account friend_requested_by_list_r : friend_requested_by_list_rel) friend_requested_by_list.add(new AccountViewModel(new ObjectId(friend_requested_by_list_r.getHex_string_id())));
-        } catch (Exception e) {
-            Map<String, String> result = new HashMap<>();
-            result.put("Status", "ERROR");
-            result.put("Message", "Could not get friend requested by list");
-            result.put("UserId", _id.toHexString());
-            return gson.toJson(result);
-        }
-        return gson.toJson(friend_requested_by_list);
-    }
-
     @RequestMapping(value = "/user/friend_request_process", method = RequestMethod.POST)
     @ResponseBody
-    public String friend_request_process(@RequestParam(name = "_id", required = false) String _uid) {
+    public String friend_request_process(@RequestParam("_id") String _uid, @RequestParam(name = "accept", required = false, defaultValue = "false") boolean accept) {
         Gson gson = new Gson();
         ObjectId _id0, _id1;
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (_uid == null || _uid == "") {
-            _id1 = userDetails.get_id();
-        } else {
-            _id1 = new ObjectId(_uid);
-        }
+        _id1 = new ObjectId(_uid);
         _id0 = userDetails.get_id();
         if (_id0.toHexString().equalsIgnoreCase(_id1.toHexString())) {
             Map<String, String> result = new HashMap<>();
@@ -198,13 +118,20 @@ public class UserController {
         }
         com.swd.db.relationships.entities.Account acc0_rel = accountRepository.findByHexId(_id0.toHexString());
         com.swd.db.relationships.entities.Account acc1_rel = accountRepository.findByHexId(_id1.toHexString());
+        if (acc0_rel == null || acc1_rel == null) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "User not found");
+            return gson.toJson(result);
+        }
         if (accountRepository.isFriend(acc0_rel, acc1_rel)) {
             Map<String, String> result = new HashMap<>();
             result.put("Status", "ERROR");
             result.put("Message", "You are already friend");
             return gson.toJson(result);
         } else if (accountRepository.isFriendRequestReceived(acc0_rel, acc1_rel)) {
-            accountRepository.CreateFriendRelationship(acc0_rel, acc1_rel);
+            accountRepository.DeleteFriendRequest(acc1_rel, acc0_rel);
+            if (accept) accountRepository.CreateFriendRelationship(acc0_rel, acc1_rel);
         } else if (!accountRepository.isFriendRequestReceived(acc0_rel, acc1_rel) && !accountRepository.isFriendRequestSent(acc0_rel, acc1_rel)) {
             accountRepository.SendFriendRequest(acc0_rel, acc1_rel);
         } else if (!accountRepository.isFriendRequestReceived(acc0_rel, acc1_rel) && accountRepository.isFriendRequestSent(acc0_rel, acc1_rel)) {
@@ -216,22 +143,21 @@ public class UserController {
         return gson.toJson(result);
     }
 
-    @RequestMapping(value = "/user/posted_posts", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/{user_id}", method = RequestMethod.GET)
     @ResponseBody
-    public String posted_posts(@RequestParam(name = "_id", required = false) String _uid) {
-        
-        return "";
-    }
-
-    @RequestMapping(value = "/user/followed_posts", method = RequestMethod.POST)
-    @ResponseBody
-    public String followed_posts(@RequestParam(name = "_id", required = false) String _uid) {
-        return "";
-    }
-
-    @RequestMapping(value = "/user/author_of_posts", method = RequestMethod.POST)
-    @ResponseBody
-    public String author_of_posts(@RequestParam(name = "_id", required = false) String _uid) {
-        return "";
+    public String get_user(@PathVariable("user_id") String user_id) {
+        Gson gson = new Gson();
+        AccountViewModel accountViewModel = null;
+        try {
+            accountViewModel = new AccountViewModel(new ObjectId(user_id), accountRepository, postRepository);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "OK");
+            result.put("Message", "Can not get user data");
+            result.put("UserId", user_id);
+            return gson.toJson(result);
+        }
+        return gson.toJson(accountViewModel);
     }
 }

@@ -3,6 +3,7 @@ package com.swd.controllers;
 import com.google.gson.Gson;
 import com.swd.db.documents.models.MongoDaoBaseClass;
 import com.swd.security.CustomUserDetails;
+import com.swd.viewmodels.AccountSummViewModel;
 import com.swd.viewmodels.AccountViewModel;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +39,6 @@ public class AccountController {
     @ResponseBody
     public String account_info(@RequestParam(name = "_id", required = false) String _uid) {
         Gson gson = new Gson();
-        MongoDaoBaseClass<com.swd.db.documents.entities.Account> accdao = new MongoDaoBaseClass<>("account");
         ObjectId _id;
         if (_uid == null || _uid == "") {
             CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -47,13 +46,17 @@ public class AccountController {
         } else {
             _id = new ObjectId(_uid);
         }
-        AccountViewModel accountViewModel = null;
+        AccountSummViewModel accountSummViewModel = null;
         try {
-            accountViewModel = new AccountViewModel(_id);
+            accountSummViewModel = new AccountSummViewModel(_id);
         } catch (Exception e) {
             e.printStackTrace();
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "User not found");
+            return gson.toJson(result);
         }
-        return gson.toJson(accountViewModel);
+        return gson.toJson(accountSummViewModel);
     }
 
     @RequestMapping(value = "/changepass", method = RequestMethod.POST)

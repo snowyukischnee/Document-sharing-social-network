@@ -11,8 +11,6 @@ public class CommentViewModel {
     public Date dateCreated;
     public String content;
 
-    public CommentViewModel() { }
-
     public CommentViewModel(ObjectId _id) throws NullPointerException, IllegalStateException {
         MongoDaoBaseClass<com.swd.db.documents.entities.Comment> commentdao = new MongoDaoBaseClass<>("comment");
         Document doc = commentdao.Find(new com.swd.db.documents.entities.Comment(

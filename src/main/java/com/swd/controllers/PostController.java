@@ -50,16 +50,22 @@ public class PostController {
 
     @RequestMapping(value = "/post/react", method = RequestMethod.POST)
     @ResponseBody
-    public String react_post(@RequestParam("_id") String _pid, @RequestParam("type") Boolean react_type) {
+    public String react_post(@RequestParam("_id") String _pid) {
         Gson gson = new Gson();
-        Map<String, String> result = new HashMap<>();
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         com.swd.db.relationships.entities.Post post_rel = postRepository.findByHexId(_pid);
-        com.swd.db.relationships.entities.Account acc_rel = accountRepository.findByHexId(userDetails.get_id().toHexString());
-        accountRepository.DeleteReactPost(acc_rel, post_rel);
-        if (react_type == true) {
-            accountRepository.ReactPost(acc_rel, post_rel);
+        if (post_rel == null) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "Post not found");
+            result.put("PostId", _pid);
+            return gson.toJson(result);
         }
+        com.swd.db.relationships.entities.Account acc_rel = accountRepository.findByHexId(userDetails.get_id().toHexString());
+        boolean reacted = postRepository.isReacted(acc_rel, post_rel);
+        if (reacted) accountRepository.DeleteReactPost(acc_rel, post_rel);
+        else accountRepository.ReactPost(acc_rel, post_rel);
+        Map<String, String> result = new HashMap<>();
         result.put("Status", "OK");
         result.put("Message", "React/Ignore successfully");
         return gson.toJson(result);
@@ -67,16 +73,22 @@ public class PostController {
 
     @RequestMapping(value = "/post/follow", method = RequestMethod.POST)
     @ResponseBody
-    public String follow_post(@RequestParam("_id") String _pid, @RequestParam("type") Boolean react_type) {
+    public String follow_post(@RequestParam("_id") String _pid) {
         Gson gson = new Gson();
-        Map<String, String> result = new HashMap<>();
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         com.swd.db.relationships.entities.Post post_rel = postRepository.findByHexId(_pid);
-        com.swd.db.relationships.entities.Account acc_rel = accountRepository.findByHexId(userDetails.get_id().toHexString());
-        accountRepository.UnfollowPost(acc_rel, post_rel);
-        if (react_type == true) {
-            accountRepository.FollowPost(acc_rel, post_rel);
+        if (post_rel == null) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "Post not found");
+            result.put("PostId", _pid);
+            return gson.toJson(result);
         }
+        com.swd.db.relationships.entities.Account acc_rel = accountRepository.findByHexId(userDetails.get_id().toHexString());
+        boolean followed = postRepository.isFolowed(acc_rel, post_rel);
+        if (followed) accountRepository.UnfollowPost(acc_rel, post_rel);
+        else accountRepository.FollowPost(acc_rel, post_rel);
+        Map<String, String> result = new HashMap<>();
         result.put("Status", "OK");
         result.put("Message", "Follow/Unfollow successfully");
         return gson.toJson(result);
@@ -86,13 +98,19 @@ public class PostController {
     @ResponseBody
     public String is_reacted(@RequestParam("_id") String _pid) {
         Gson gson = new Gson();
-        Map<String, String> result = new HashMap<>();
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         com.swd.db.relationships.entities.Post post_rel = postRepository.findByHexId(_pid);
+        if (post_rel == null) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "Post not found");
+            result.put("PostId", _pid);
+            return gson.toJson(result);
+        }
         com.swd.db.relationships.entities.Account acc_rel = accountRepository.findByHexId(userDetails.get_id().toHexString());
+        Map<String, String> result = new HashMap<>();
         result.put("Status", "OK");
         result.put("Message", "Get reacted status successfully");
-        result.put("PostId", _pid);
         result.put("Result", String.valueOf(postRepository.isReacted(acc_rel, post_rel)));
         return gson.toJson(result);
     }
@@ -101,13 +119,19 @@ public class PostController {
     @ResponseBody
     public String is_followed(@RequestParam("_id") String _pid) {
         Gson gson = new Gson();
-        Map<String, String> result = new HashMap<>();
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         com.swd.db.relationships.entities.Post post_rel = postRepository.findByHexId(_pid);
+        if (post_rel == null) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "Post not found");
+            result.put("PostId", _pid);
+            return gson.toJson(result);
+        }
         com.swd.db.relationships.entities.Account acc_rel = accountRepository.findByHexId(userDetails.get_id().toHexString());
+        Map<String, String> result = new HashMap<>();
         result.put("Status", "OK");
         result.put("Message", "Get follow status successfully");
-        result.put("PostId", _pid);
         result.put("Result", String.valueOf(postRepository.isFolowed(acc_rel, post_rel)));
         return gson.toJson(result);
     }
