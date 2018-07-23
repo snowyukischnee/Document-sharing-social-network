@@ -48,9 +48,9 @@ public class AccountViewModel {
         List<com.swd.db.relationships.entities.Post> followed_posts_rel = postRepository.findPostsByFollowed(acc_rel);
         List<com.swd.db.relationships.entities.Post> author_of_posts_rel = postRepository.findPostsByAuthor(acc_rel);
         for (com.swd.db.relationships.entities.Account friend_list_r : friend_list_rel) friend_list_x.add(new AccountSummViewModel(new ObjectId(friend_list_r.getHex_string_id())));
-        for (com.swd.db.relationships.entities.Post posted_posts_r : posted_posts_rel) posted_posts_x.add(new PostSummViewModel(new ObjectId(posted_posts_r.getHex_string_id())));
-        for (com.swd.db.relationships.entities.Post followed_posts_r : followed_posts_rel) followed_posts_x.add(new PostSummViewModel(new ObjectId(followed_posts_r.getHex_string_id())));
-        for (com.swd.db.relationships.entities.Post author_of_posts_r : author_of_posts_rel) author_of_posts_x.add(new PostSummViewModel(new ObjectId(author_of_posts_r.getHex_string_id())));
+        for (com.swd.db.relationships.entities.Post posted_posts_r : posted_posts_rel) posted_posts_x.add(new PostSummViewModel(new ObjectId(posted_posts_r.getHex_string_id()), accountRepository, postRepository));
+        for (com.swd.db.relationships.entities.Post followed_posts_r : followed_posts_rel) followed_posts_x.add(new PostSummViewModel(new ObjectId(followed_posts_r.getHex_string_id()),accountRepository, postRepository));
+        for (com.swd.db.relationships.entities.Post author_of_posts_r : author_of_posts_rel) author_of_posts_x.add(new PostSummViewModel(new ObjectId(author_of_posts_r.getHex_string_id()), accountRepository, postRepository));
         this.friend_list = friend_list_x;
         this.posted_posts = posted_posts_x;
         this.followed_posts = followed_posts_x;

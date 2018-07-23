@@ -76,4 +76,7 @@ public interface AccountRepository extends Neo4jRepository<Account, Long> {
     //------------------------------------------------------------------------------------------------------------------
     @Query("match (a:Account), (b:Post), (c:Comment) where id(a) = {0} and id(b) = {1} and id(c) = {2} create (a)-[:HAS_POSTED]->(c), (c)-[:COMMENT_OF]->(b)")
     void CommentOn(Account account, Post post, Comment comment);
+
+    @Query("match (a:Account)-[:HAS_POSTED]->(b:Comment) where id(b) = {0} return a")
+    Account findOwnerByComment(Comment comment);
 }

@@ -20,7 +20,7 @@ public class PostViewModel {
     public List<AccountSummViewModel> liked_by;
     public List<AccountSummViewModel> followed_by;
 
-    public PostViewModel(ObjectId _id, AccountRepository accountRepository, CommentRepository commentRepository, PostRepository postRepository) throws NullPointerException, IllegalStateException {
+    public PostViewModel(ObjectId _id, AccountRepository accountRepository, PostRepository postRepository) throws NullPointerException, IllegalStateException {
         MongoDaoBaseClass<com.swd.db.documents.entities.Post> postdao = new MongoDaoBaseClass<>("post");
         Document doc = postdao.Find(new com.swd.db.documents.entities.Post(
                 _id,

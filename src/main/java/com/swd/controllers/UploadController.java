@@ -156,7 +156,7 @@ public class UploadController {
     public String list_uploaded(@PathVariable("post_id") String post_id, HttpServletRequest request) {
         Gson gson = new Gson();
         try {
-            PostSummViewModel postSummViewModel = new PostSummViewModel(new ObjectId(post_id));
+            PostSummViewModel postSummViewModel = new PostSummViewModel(new ObjectId(post_id), accountRepository, postRepository);
         } catch (Exception e) {
             Map<String, String> result = new HashMap<>();
             result.put("Status", "ERROR");

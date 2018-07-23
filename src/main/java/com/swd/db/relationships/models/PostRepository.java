@@ -34,4 +34,10 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
 
     @Query("match (a:Account)-[r:HAS_FOLLOWED]->(b:Post) return b, count(distinct r) as num order by num desc")
     List<Post> getMostFollowedPosts();
+
+    @Query("match (a:Account)-[r:HAS_REACTED]->(b:Post) return b, count(distinct r) as num order by num desc skip {0} limit {1}")
+    List<Post> getMostReactedPostsWBound(Integer lower_bound, Integer no_items);
+
+    @Query("match (a:Account)-[r:HAS_REACTED]->(b:Post) return b, count(distinct r) as num order by num desc")
+    List<Post> getMostReactedPosts();
 }

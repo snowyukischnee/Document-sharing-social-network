@@ -7,7 +7,7 @@ import com.swd.db.relationships.models.CommentRepository;
 import com.swd.db.relationships.models.PostRepository;
 import com.swd.security.CustomUserDetails;
 import com.swd.viewmodels.CommentViewModel;
-import org.bson.Document;
+import com.swd.viewmodels.PostSummViewModel;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +35,15 @@ public class CommentController {
     @ResponseBody
     public String list_users(@RequestParam("_id") String _pid) {
         Gson gson = new Gson();
+        try {
+            PostSummViewModel postSummViewModel = new PostSummViewModel(new ObjectId(_pid), accountRepository, postRepository);
+        } catch (Exception e) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "Post id is invalid");
+            result.put("PostId", _pid);
+            return gson.toJson(result);
+        }
         com.swd.db.relationships.entities.Post post_rel = postRepository.findByHexId(_pid);
         if (post_rel == null) {
             Map<String, String> result = new HashMap<>();
@@ -47,7 +56,7 @@ public class CommentController {
         List<CommentViewModel> list = new ArrayList<>();
         for (com.swd.db.relationships.entities.Comment comment_rel : comment_list_rel) {
             try {
-                list.add(new CommentViewModel(new ObjectId(comment_rel.getHex_string_id())));
+                list.add(new CommentViewModel(new ObjectId(comment_rel.getHex_string_id()), accountRepository, commentRepository));
             } catch (NullPointerException e) {
                 e.printStackTrace();
                 Map<String, String> result = new HashMap<>();
@@ -66,6 +75,15 @@ public class CommentController {
     @ResponseBody
     public String comment(@RequestParam("_id") String _pid, @RequestParam("content") String content) {
         Gson gson = new Gson();
+        try {
+            PostSummViewModel postSummViewModel = new PostSummViewModel(new ObjectId(_pid), accountRepository, postRepository);
+        } catch (Exception e) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "Post id is invalid");
+            result.put("PostId", _pid);
+            return gson.toJson(result);
+        }
         MongoDaoBaseClass<com.swd.db.documents.entities.Comment> commentdao = new MongoDaoBaseClass<>("comment");
         com.swd.db.relationships.entities.Post post_rel = postRepository.findByHexId(_pid);
         if (post_rel == null) {

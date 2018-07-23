@@ -36,7 +36,7 @@ public class PostController {
         Gson gson = new Gson();
         PostViewModel post;
         try {
-            post = new PostViewModel(new ObjectId(post_id), accountRepository, commentRepository, postRepository);
+            post = new PostViewModel(new ObjectId(post_id), accountRepository, postRepository);
         } catch (Exception e) {
             e.printStackTrace();
             Map<String, String> result = new HashMap<>();

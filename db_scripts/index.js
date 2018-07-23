@@ -28,7 +28,7 @@ async function create_index(collection, index, options) {
 async function generate() {
 	await create_db()
 	await create_collection("account")
-	await create_index("account", "username", {unique: true})
+	await create_index("account", "email", {unique: true})
 	await create_collection("post")
 	await create_collection("comment")
 }
