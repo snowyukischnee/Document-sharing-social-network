@@ -1,11 +1,11 @@
 package com.swd.controllers;
 
 import com.google.gson.Gson;
+import com.swd.db.documents.models.MongoDaoBaseClass;
 import com.swd.db.relationships.models.AccountRepository;
 import com.swd.db.relationships.models.CommentRepository;
 import com.swd.db.relationships.models.PostRepository;
 import com.swd.security.CustomUserDetails;
-import com.swd.viewmodels.AccountViewModel;
 import com.swd.viewmodels.PostViewModel;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,6 +133,52 @@ public class PostController {
         result.put("Status", "OK");
         result.put("Message", "Get follow status successfully");
         result.put("Result", String.valueOf(postRepository.isFolowed(acc_rel, post_rel)));
+        return gson.toJson(result);
+    }
+
+    @RequestMapping(value = "/delete/post", method = RequestMethod.POST)
+    @ResponseBody
+    public String delete_post(@RequestParam("_id") String _pid) {
+        Gson gson = new Gson();
+        PostViewModel postViewModel = null;
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            postViewModel = new PostViewModel(new ObjectId(_pid), accountRepository, postRepository);
+        } catch (Exception e) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "Post id is invalid");
+            result.put("PostId", _pid);
+            return gson.toJson(result);
+        }
+        if (userDetails.get_id().toHexString().equalsIgnoreCase(postViewModel.posted_by._id) == false) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "Current user doesn't own this post");
+            result.put("PostId", _pid);
+            return gson.toJson(result);
+        }
+        MongoDaoBaseClass<com.swd.db.documents.entities.Post> postdao = new MongoDaoBaseClass<>("post");
+        com.swd.db.documents.entities.Post post_orig = new com.swd.db.documents.entities.Post(
+                new ObjectId(postViewModel._id),
+                postViewModel.title,
+                postViewModel.description,
+                postViewModel.publicationDate,
+                postViewModel.dateCreated,
+                true
+        );
+        com.swd.db.documents.entities.Post post_dest = new com.swd.db.documents.entities.Post(
+                new ObjectId(postViewModel._id),
+                postViewModel.title,
+                postViewModel.description,
+                postViewModel.publicationDate,
+                postViewModel.dateCreated,
+                false
+        );
+        postdao.Update(post_orig, post_dest);
+        Map<String, String> result = new HashMap<>();
+        result.put("Status", "OK");
+        result.put("Message", "Post deleted");
         return gson.toJson(result);
     }
 }

@@ -33,7 +33,7 @@ public class CommentController {
 
     @RequestMapping(value = "/list/comments", method = RequestMethod.GET)
     @ResponseBody
-    public String list_users(@RequestParam("_id") String _pid) {
+    public String list_comments(@RequestParam("_id") String _pid) {
         Gson gson = new Gson();
         try {
             PostSummViewModel postSummViewModel = new PostSummViewModel(new ObjectId(_pid), accountRepository, postRepository);
@@ -110,6 +110,48 @@ public class CommentController {
         Map<String, String> result = new HashMap<>();
         result.put("Status", "OK");
         result.put("Message", "Comment successfully");
+        return gson.toJson(result);
+    }
+
+    @RequestMapping(value = "/delete/comment", method = RequestMethod.POST)
+    @ResponseBody
+    public String delete_comment(@RequestParam("_id") String _pid) {
+        Gson gson = new Gson();
+        CommentViewModel commentViewModel = null;
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            commentViewModel = new CommentViewModel(new ObjectId(_pid), accountRepository, commentRepository);
+        } catch (Exception e) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "Comment id is invalid");
+            result.put("PostId", _pid);
+            return gson.toJson(result);
+        }
+        if (userDetails.get_id().toHexString().equalsIgnoreCase(commentViewModel.posted_by._id) == false) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "Current user doesn't own this post");
+            result.put("PostId", _pid);
+            return gson.toJson(result);
+        }
+        MongoDaoBaseClass<com.swd.db.documents.entities.Comment> commentdao = new MongoDaoBaseClass<>("comment");
+        com.swd.db.documents.entities.Comment comment_orig = new com.swd.db.documents.entities.Comment(
+                new ObjectId(commentViewModel._id),
+                commentViewModel.dateCreated,
+                commentViewModel.content,
+                true
+        );
+        com.swd.db.documents.entities.Comment comment_dest = new com.swd.db.documents.entities.Comment(
+                new ObjectId(commentViewModel._id),
+                commentViewModel.dateCreated,
+                commentViewModel.content,
+                false
+        );
+        commentdao.Update(comment_orig, comment_dest);
+        Map<String, String> result = new HashMap<>();
+        result.put("Status", "OK");
+        result.put("Message", "Comment deleted");
         return gson.toJson(result);
     }
 }
