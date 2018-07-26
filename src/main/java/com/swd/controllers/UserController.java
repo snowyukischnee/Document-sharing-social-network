@@ -30,6 +30,36 @@ public class UserController {
     @Autowired
     PostRepository postRepository;
 
+    @RequestMapping(value = "/user/unfriend", method = RequestMethod.POST)
+    @ResponseBody
+    public String unfriend(@RequestParam("_id") String _uid) {
+        Gson gson = new Gson();
+        ObjectId _id0, _id1;
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        _id1 = new ObjectId(_uid);
+        _id0 = userDetails.get_id();
+        com.swd.db.relationships.entities.Account acc0_rel = accountRepository.findByHexId(_id0.toHexString());
+        com.swd.db.relationships.entities.Account acc1_rel = accountRepository.findByHexId(_id1.toHexString());
+        if (acc0_rel == null || acc1_rel == null) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "ERROR");
+            result.put("Message", "User not found");
+            return gson.toJson(result);
+        }
+        if (!accountRepository.isFriend(acc0_rel, acc1_rel)) {
+            Map<String, String> result = new HashMap<>();
+            result.put("Status", "OK");
+            result.put("Message", "User is not current user's friend");
+            result.put("UserId", _id1.toHexString());
+            return gson.toJson(result);
+        }
+        accountRepository.DeleteFriendRelationship(acc0_rel, acc1_rel);
+        Map<String, String> result = new HashMap<>();
+        result.put("Status", "OK");
+        result.put("Message", "Unfriend successfully");
+        return gson.toJson(result);
+    }
+
     @RequestMapping(value = "/user/is_friend", method = RequestMethod.POST)
     @ResponseBody
     public String is_friend(@RequestParam("_id") String _uid) {

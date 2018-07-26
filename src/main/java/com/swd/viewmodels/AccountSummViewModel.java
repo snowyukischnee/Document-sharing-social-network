@@ -33,5 +33,6 @@ public class AccountSummViewModel {
         this.email = doc.getString("email");
         this.dob = doc.getDate("dob");
         this.gender = doc.getBoolean("gender");
+        accdao.close();
     }
 }

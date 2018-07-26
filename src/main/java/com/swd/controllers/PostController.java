@@ -179,6 +179,7 @@ public class PostController {
         Map<String, String> result = new HashMap<>();
         result.put("Status", "OK");
         result.put("Message", "Post deleted");
+        postdao.close();
         return gson.toJson(result);
     }
 }

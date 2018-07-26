@@ -55,5 +55,6 @@ public class PostViewModel {
         this.authors = authors;
         this.liked_by = liked_by;
         this.followed_by = followed_by;
+        postdao.close();
     }
 }

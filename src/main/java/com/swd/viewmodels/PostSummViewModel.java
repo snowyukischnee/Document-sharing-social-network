@@ -16,6 +16,8 @@ public class PostSummViewModel {
     public String title;
     public String description;
     public Date publicationDate;
+    public Integer likes;
+    public Integer followers;
 
     public PostSummViewModel(ObjectId _id, AccountRepository accountRepository, PostRepository postRepository) throws IllegalStateException, NullPointerException {
         MongoDaoBaseClass<Post> postdao = new MongoDaoBaseClass<>("post");
@@ -38,5 +40,8 @@ public class PostSummViewModel {
         com.swd.db.relationships.entities.Account owner_rel = accountRepository.findOwnerByPost(post_rel);
         AccountSummViewModel owner = new AccountSummViewModel(new ObjectId(owner_rel.getHex_string_id()));
         this.posted_by = owner;
+        this.likes = accountRepository.findNumberOfReactedByPost(post_rel);
+        this.followers = accountRepository.findNumberOfFollowedByPost(post_rel);
+        postdao.close();
     }
 }

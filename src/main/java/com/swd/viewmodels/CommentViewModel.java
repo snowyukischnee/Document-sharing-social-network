@@ -32,5 +32,6 @@ public class CommentViewModel {
         com.swd.db.relationships.entities.Account owner_rel = accountRepository.findOwnerByComment(comment_rel);
         AccountSummViewModel owner = new AccountSummViewModel(new ObjectId(owner_rel.getHex_string_id()));
         this.posted_by = owner;
+        commentdao.close();
     }
 }

@@ -55,6 +55,10 @@ public class MongoDaoBaseClass<T extends MongoEntityBaseClass> implements MongoD
         return arr;
     }
 
+    public void close() {
+        mongoClient.close();
+    }
+
     public List<Document> List_custom() {
         return null;
     }

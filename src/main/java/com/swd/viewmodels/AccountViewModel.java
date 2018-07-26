@@ -60,5 +60,6 @@ public class AccountViewModel {
         this.followed_posts = followed_posts_x;
         this.author_of_posts = author_of_posts_x;
         this.friend_requested_by_list = friend_requested_by_list_x;
+        accdao.close();
     }
 }

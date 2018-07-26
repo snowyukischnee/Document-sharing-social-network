@@ -88,6 +88,7 @@ public class SearchController {
                 Map<String, String> result_e = new HashMap<>();
                 result_e.put("Status", "ERROR");
                 result_e.put("Message", "Failed to search by date_created");
+                postdao.close();
                 return gson.toJson(result_e);
             }
         } else if (sort.equalsIgnoreCase("publication_date")) {
@@ -127,6 +128,7 @@ public class SearchController {
                 Map<String, String> result_e = new HashMap<>();
                 result_e.put("Status", "ERROR");
                 result_e.put("Message", "Failed to search by publication_date");
+                postdao.close();
                 return gson.toJson(result_e);
             }
         } else if (sort.equalsIgnoreCase("most_followed")) {
@@ -174,6 +176,7 @@ public class SearchController {
                 Map<String, String> result_e = new HashMap<>();
                 result_e.put("Status", "ERROR");
                 result_e.put("Message", "Failed to search by most_followed");
+                postdao.close();
                 return gson.toJson(result_e);
             }
         } else if (sort.equalsIgnoreCase("most_reacted")) {
@@ -221,12 +224,14 @@ public class SearchController {
                 Map<String, String> result_e = new HashMap<>();
                 result_e.put("Status", "ERROR");
                 result_e.put("Message", "Failed to search by most_followed");
+                postdao.close();
                 return gson.toJson(result_e);
             }
         } else {
             Map<String, String> result_e = new HashMap<>();
             result_e.put("Status", "ERROR");
             result_e.put("Message", "Operation not supported yet");
+            postdao.close();
             return gson.toJson(result_e);
         }
         return gson.toJson(result);
@@ -274,8 +279,10 @@ public class SearchController {
             Map<String, String> result_e = new HashMap<>();
             result_e.put("Status", "ERROR");
             result_e.put("Message", "Failed to search");
+            accdao.close();
             return gson.toJson(result_e);
         }
+        accdao.close();
         return gson.toJson(result);
     }
 }

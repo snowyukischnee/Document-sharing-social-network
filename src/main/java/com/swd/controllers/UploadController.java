@@ -54,6 +54,8 @@ public class UploadController {
             e.printStackTrace();
             result.put("Status", "ERROR");
             result.put("Message", "Could not parse input");
+            accdao.close();
+            postdao.close();
             return gson.toJson(result);
         }
         String description = data_map.get("description").toString();
@@ -77,6 +79,8 @@ public class UploadController {
             if (doc == null) {
                 result.put("Status", "ERROR");
                 result.put("Message", "User from authors list not exist");
+                accdao.close();
+                postdao.close();
                 return gson.toJson(result);
             }
         }
@@ -84,6 +88,8 @@ public class UploadController {
         if (files == null || files.length == 0) {
             result.put("Status", "ERROR");
             result.put("Message", "No file(s) selected");
+            accdao.close();
+            postdao.close();
             return gson.toJson(result);
         }
         //--------------------------------------------------------------------------------------------------------------
@@ -111,12 +117,16 @@ public class UploadController {
                 result.put("Status", "ERROR");
                 result.put("Message", "Could not upload files");
                 result.put("PostId", _id.toHexString());
+                accdao.close();
+                postdao.close();
                 return gson.toJson(result);
             }
         }
         result.put("Status", "OK");
         result.put("Message", "Upload successfully");
         result.put("PostId", _id.toHexString());
+        accdao.close();
+        postdao.close();
         return gson.toJson(result);
     }
 

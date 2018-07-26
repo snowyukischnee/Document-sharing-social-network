@@ -29,6 +29,9 @@ public interface AccountRepository extends Neo4jRepository<Account, Long> {
     @Query("match (a:Account)-[:HAS_REACTED]->(b:Post) where id(b) = {0} return a")
     List<Account> findReactedByPost(Post post);
 
+    @Query("match (a:Account)-[r:HAS_REACTED]->(b:Post) where id(b) = {0} return count(r)")
+    Integer findNumberOfReactedByPost(Post post);
+
     @Query("match (a:Account)-[r:HAS_REACTED]->(b:Post) where id(a) = {0} and id(b) = {1} delete r")
     void DeleteReactPost(Account account, Post post);
 
@@ -67,6 +70,9 @@ public interface AccountRepository extends Neo4jRepository<Account, Long> {
     //------------------------------------------------------------------------------------------------------------------
     @Query("match (a:Account)-[:HAS_FOLLOWED]->(b:Post) where id(b) = {0} return a")
     List<Account> findFollowedByPost(Post post);
+
+    @Query("match (a:Account)-[r:HAS_FOLLOWED]->(b:Post) where id(b) = {0} return count(r)")
+    Integer findNumberOfFollowedByPost(Post post);
 
     @Query("match (a:Account), (b:Post) where id(a) = {0} and id(b) = {1} merge (a)-[:HAS_FOLLOWED]->(b)")
     void FollowPost(Account account, Post post);

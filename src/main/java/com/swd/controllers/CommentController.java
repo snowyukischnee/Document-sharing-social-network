@@ -91,6 +91,7 @@ public class CommentController {
             result.put("Status", "ERROR");
             result.put("Message", "Post id is invalid");
             result.put("PostId", _pid);
+            commentdao.close();
             return gson.toJson(result);
         }
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -110,6 +111,7 @@ public class CommentController {
         Map<String, String> result = new HashMap<>();
         result.put("Status", "OK");
         result.put("Message", "Comment successfully");
+        commentdao.close();
         return gson.toJson(result);
     }
 
@@ -152,6 +154,7 @@ public class CommentController {
         Map<String, String> result = new HashMap<>();
         result.put("Status", "OK");
         result.put("Message", "Comment deleted");
+        commentdao.close();
         return gson.toJson(result);
     }
 }

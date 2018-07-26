@@ -93,6 +93,7 @@ public class AccountController {
         Map<String, String> result = new HashMap<>();
         result.put("Status", "OK");
         result.put("Message", "Password changed successfully");
+        accdao.close();
         return gson.toJson(result);
     }
 
